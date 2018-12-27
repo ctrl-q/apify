@@ -157,6 +157,19 @@ class Crawler(CrawlerABC):
         r.raise_for_status()
         return r.json()
 
+    def update_settings(self, settings={}):
+        """Updates a specific crawler's settings
+        https://www.apify.com/docs/api/v1#/reference/crawlers/crawler-settings/update-crawler-settings
+
+        Args:
+            settings (JSON object): settings to be updated
+
+        Returns:
+            settings (JSON object): new crawler settings
+        """
+        r = self.get_session().put(self._base_url, params={"token": self.get_token()}, json=settings)
+        r.raise_for_status()
+        return r.json()
 class Execution(CrawlerABC):
     def __init__(self, execution_id, session=requests.session(), config="apify_config.json"):
         """Class for interacting with Apify executions
