@@ -85,9 +85,20 @@ class Crawler(CrawlerABC):
             time_left = timeout - time_elapsed
             details_url = r.json()["detailsUrl"]
             while time_left > 0 and status == "RUNNING":
-                wait = min(time_left, 60)
-                time.sleep(wait)
-                status = self.session.get(details_url).json()["status"]
+
+    def get_last_execution(self, **kwargs):
+        """Gets information about the crawler's last execution
+        https://www.apify.com/docs/api/v1#/reference/executions/last-execution/get-last-execution
+
+        Args:
+        kwargs:
+            status (str): filter for the execution status (default: no filter)
+
+        Returns:
+            execution_details (JSON object): execution details
+        """
+        return self.get_list_of_executions(desc=1)[0]
+
 
 class Execution(CrawlerABC):
     def __init__(self, execution_id, session=requests.session(), config="apify_config.json"):
