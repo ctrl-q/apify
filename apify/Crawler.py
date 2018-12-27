@@ -8,14 +8,46 @@ import requests
 FILE_LOCATION = os.path.split(__file__)[0]
 
 
-class Crawler:
-    """
-    Arguments
-    crawler_id (string): id of Apify crawler
-    session: requests.session object for sending the HTTP requests
+class CrawlerABC:
+    def __init__(self, session, config):
+        self._user_id, self._token = common._get_auth(config)
+        self.set_session(session)
+        self._config = config
 
-    Defines methods for running Apify crawlers & getting results
+    def get_session(self):
+        """Returns: session (requests.Session): session used for requests"""
+        return self._session
+
+    def get_token(self):
+        """Returns: token (str): API token"""
+        return self._token
+
+    def get_user_id(self):
+        """Returns: user_id (str): API user ID"""
+        return self._user_id
+
+    def set_session(self, session):
+        """Changes the session object used for requests
+        Args:
+            session (requests.Session): session used for requests
     """
+        self._session = session
+
+
+class Crawler(CrawlerABC):
+    def __init__(self, crawler_id, session=requests.session(), config="apify_config.json"):
+        """Class for interacting with Apify crawlers
+        https://www.apify.com/docs/api/v1#/reference/crawlers
+
+        Args:
+            crawler_id (str): ID of Apify crawler
+            session (requests.Session object): used to send the HTTP requests (default: new session)
+            config (str, path-like): path to JSON file with user ID and token
+    """
+        super().__init__(session, config)
+        self._crawler_id = crawler_id
+        self._base_url = 'https://api.apify.com/v1/' + \
+            self.get_user_id() + '/crawlers/' + self.get_crawler_id()
 
     def __init__(self, crawler_id, session=requests.session()):
         try:
