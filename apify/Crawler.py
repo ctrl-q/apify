@@ -133,6 +133,13 @@ class Crawler(CrawlerABC):
 
         return execution.get_results(combine=combine, **kwargs)
 
+    def delete(self):
+        """Deletes the crawler
+        https://www.apify.com/docs/api/v1#/reference/crawlers/crawler-settings/delete-crawler
+        """
+        r = self.get_session().delete(self._base_url, params={"token": self.get_token()})
+        r.raise_for_status()
+
 class Execution(CrawlerABC):
     def __init__(self, execution_id, session=requests.session(), config="apify_config.json"):
         """Class for interacting with Apify executions
