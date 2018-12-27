@@ -196,7 +196,7 @@ class Crawler(CrawlerABC):
         Returns:
             execution_details (JSON object): execution details
         """
-        execution_id = self.get_last_execution(status=status)["_id"]
+        execution_id = self.get_last_execution()["_id"]
         execution = Execution(execution_id, session=self.get_session(), config=self._config)
         return execution.stop()
 
