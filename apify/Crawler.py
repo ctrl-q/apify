@@ -99,6 +99,39 @@ class Crawler(CrawlerABC):
         """
         return self.get_list_of_executions(desc=1)[0]
 
+    def get_last_execution_results(self, status=None, combine=False, **kwargs):
+        """Gets results from the last crawler execution
+        https://www.apify.com/docs/api/v1#/reference/results/last-execution-results/get-last-execution-results
+
+        Args:
+            status (str): filter for the execution status (default: no filter)
+            combine (bool): if each page function result is a JSON object, combine them into one (if format == "json" and attachment == 0) (default: False)
+        kwargs:
+            format (str): format of the results, either "json", "jsonl", "csv", "html", "xlsx", "xml" or "rss". (default: "json")
+            simplified (int): if 1, then results are returned without metadata (default: 0)
+            offset (int): rank of first request to return (default: 0)
+            limit (int): maximum number of page results to return (default: 10000)
+            desc (int): if 1, results are returned from most-recently to least-recently saved in database
+            attachment (int): if 1, results will be saved to working directory and not returned (default: 0)
+            delimiter (str): delimiter character for CSV format (default: ",")
+            bom (int): if 1, results for all formats will be prefixed by UTF-8 BOM. If 0, BOM will be skipped (default: None)
+            xmlRoot (str): default root element name of XML output (default: "results")
+            xmlRow (str): default element name wrapping each page function results (default: "page" if simplified == 1 else "result")
+            hideUrl (int): if 1, "url" field will not be added to each page function result (default: 0)
+            skipFailedPages (int): if 1, pages with errors are skipped are errorInfo is hidden (default: 0)
+            skipHeaderRow (int): if 1, header row is skipped in CSV format (default: 0)
+
+        Returns:
+            out (JSON object or str): path to download file if attachment == 0 else execution results
+        """
+        if status is None:
+            execution_id = self.get_last_execution()["_id"]
+        else:
+            execution_id = self.get_last_execution(status=status)["_id"]
+
+        execution = Execution(execution_id, session=self.get_session(), config=self._config)
+
+        return execution.get_results(combine=combine, **kwargs)
 
 class Execution(CrawlerABC):
     def __init__(self, execution_id, session=requests.session(), config="apify_config.json"):
