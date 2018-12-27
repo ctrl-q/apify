@@ -170,6 +170,27 @@ class Crawler(CrawlerABC):
         r = self.get_session().put(self._base_url, params={"token": self.get_token()}, json=settings)
         r.raise_for_status()
         return r.json()
+
+    def get_list_of_executions(self, **kwargs):
+        """Gets the crawler's list of executions
+        https://www.apify.com/docs/api/v1#/reference/executions/list-of-executions/get-list-of-executions
+
+        Args:
+        kwargs:
+            status (str): Filter for the execution status (default: no filter)
+            offset (int): Rank of first execution to return (default: 0)
+            limit (int): Maximum number of executions to return (default: 1000)
+            desc (int): If 1, executions are sorted from newest to oldest (default: None)
+
+        Returns:
+            execution_list (JSON object): list of executions and their metadata
+        """
+        url = self._base_url + "/execs"
+        kwargs.setdefault("token", self.get_token())
+        r = self.get_session().get(url, params=kwargs)
+        r.raise_for_status()
+        return r.json()
+
 class Execution(CrawlerABC):
     def __init__(self, execution_id, session=requests.session(), config="apify_config.json"):
         """Class for interacting with Apify executions
