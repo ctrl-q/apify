@@ -206,6 +206,10 @@ class Crawler(CrawlerABC):
         return execution.stop()
 
     def get_crawler_id(self):
+        """Returns: crawler_id (str): crawler ID"""
+        return self._crawler_id
+
+
 class Execution(CrawlerABC):
     def __init__(self, execution_id, session=requests.session(), config="apify_config.json"):
         """Class for interacting with Apify executions
