@@ -57,57 +57,103 @@ class Crawler:
                 time.sleep(wait)
                 status = self.session.get(details_url).json()["status"]
 
-        assert status == "SUCCEEDED", "Crawler did not finish. Response received:\n" + \
-            str(r.json())
-        if verbose:
-            print("Success.")
+class Execution(CrawlerABC):
+    def __init__(self, execution_id, session=requests.session(), config="apify_config.json"):
+        """Class for interacting with Apify executions
+        https://www.apify.com/docs/api/v1#/reference/executions
 
-    def get_results(self, verbose=False):
+        Args:
+            crawler_id (str): ID of Apify crawler
+            session (requests.Session object): used to send the HTTP requests (default: new session)
+            config (str, path-like): path to JSON file with user ID and token
         """
-        GETs result of last execution as JSON
-        Returns: JSON response data
+        super().__init__(session, config)
+        self._execution_id = execution_id
+        self._base_url = "https://api.apify.com/v1/execs/" + self.get_execution_id()
+
+    def get_results(self, combine=False, **kwargs):
+        """ Gets execution results
+        https://www.apify.com/docs/api/v1#/reference/executions
+
+        Args:
+            combine (bool): if each page function result is a JSON object, combine them into one (if format == "json" and attachment == 0) (default: False)
+        kwargs:
+            format (str): format of the results, either "json", "jsonl", "csv", "html", "xlsx", "xml" or "rss". (default: "json")
+            simplified (int): if 1, then results are returned without metadata (default: 0)
+            offset (int): rank of first request to return (default: 0)
+            limit (int): maximum number of page results to return (default: 10000)
+            desc (int): if 1, results are returned from most-recently to least-recently saved in database
+            attachment (int): if 1, results will be saved to working directory and not returned (default: 0)
+            delimiter (str): delimiter character for CSV format (default: ",")
+            bom (int): if 1, results for all formats will be prefixed by UTF-8 BOM. If 0, BOM will be skipped (default: None)
+            xmlRoot (str): default root element name of XML output (default: "results")
+            xmlRow (str): default element name wrapping each page function results (default: "page" if simplified == 1 else "result")
+            hideUrl (int): if 1, "url" field will not be added to each page function result (default: 0)
+            skipFailedPages (int): if 1, pages with errors are skipped are errorInfo is hidden (default: 0)
+            skipHeaderRow (int): if 1, header row is skipped in CSV format (default: 0)
+
+        Returns:
+            out (JSON object or str): path to download file if attachment == 0 else execution results
+
         """
-        url = self.base_url + '/lastExec/results'
-        if verbose:
-            print("Getting crawler results")
-        data = self.session.get(url, params={"token": self.token})
-        data_json = data.json()
+        url = self._base_url + "/results"
+        kwargs.setdefault("token", self.get_token())
+        format_ = kwargs.get("format", "json").lower()
+        accepted_formats = ("json", "jsonl", "csv", "html",
+                            "xlsx", "xml", "csv", None)
+        if format_ not in accepted_formats:
+            raise ValueError("Accepted formats: {0}".format(accepted_formats))
+
+        if kwargs.get("attachment") == 1:
+            file_name, headers = urllib.request.urlretrieve(url)
+            return file_name
+
+        r = self.get_session().get(url, params=kwargs)
+        r.raise_for_status()
+        if format_ in ("json", "jsonl"):
+            result = r.json()
+            if combine:
+                simplified = kwargs.get("simplified", 0)
+                if simplified == 0:
         result = list(
-            d_j["pageFunctionResult"]
-            for d_j in data_json if d_j["pageFunctionResult"] is not None
+                        r["pageFunctionResult"]
+                        for r in result if r["pageFunctionResult"] is not None
         )
+                elif simplified == 1:
+                    result = list(r for r in result if r is not None)
+
         if len(result) > 0:
             if isinstance(result[0], list):
                 result = list(itertools.chain.from_iterable(result))
 
-            if verbose:
-                print("Success.")
+        else:
+            result = r.text
         return result
 
-    def get_settings(self, noSecrets=0, executionId=""):
-        params = {"token": self.token}
-        if noSecrets == 1:
-            params["noSecrets"] = 1
-        if len(executionId) > 0:
-            params["executionId"] = executionId
-        r = self.session.get(self.base_url, params=params)
-        assert r.status_code == 200, "Error. Status code: {0}: {1}".format(
-            r.status_code, r.json())
+    def stop(self):
+        """Stops the execution
+        https://www.apify.com/docs/api/v1#/reference/executions/stop-execution/stop-execution
+
+        Returns:
+            execution_details (JSON object): execution details
+        """
+        url = self._base_url + "/stop"
+        r = self.get_session().post(url, params={"token": self.get_token()})
+        r.raise_for_status()
         return r.json()
 
-    def update_settings(self, settings={}):
-        r = self.session.put(self.base_url, params={"token": self.token}, json=settings)
-        assert r.status_code == 200, "Error. Status code: {0}: {1}".format(
-            r.status_code, r.json())
+    def get_details(self):
+        """Gets execution details
+        https://www.apify.com/docs/api/v1#/reference/executions/execution-details/get-execution-details
+
+        Returns:
+            execution_details (JSON object): execution details
+        """
+        r = self.get_session().get(self._base_url, params={"token": self.get_token()})
+        r.raise_for_status()
         return r.json()
 
-    def refresh(self, timeout=600, settings={}):
-        """
-        Calls run then get_crawler_results
-        """
-        self.run(timeout=timeout, settings=settings)
-        return self.get_results()
+    def get_execution_id(self):
+        """Returns: execution_id (str): crawler ID"""
+        return self._execution_id
     
-    def raise_for_status(self):
-        # TODO
-        pass
