@@ -1,11 +1,10 @@
 import itertools
-import json
-import os
 import time
+import urllib.request
 
 import requests
 
-FILE_LOCATION = os.path.split(__file__)[0]
+from . import common
 
 
 class CrawlerABC:
@@ -30,7 +29,7 @@ class CrawlerABC:
         """Changes the session object used for requests
         Args:
             session (requests.Session): session used for requests
-    """
+        """
         self._session = session
 
 
@@ -43,48 +42,44 @@ class Crawler(CrawlerABC):
             crawler_id (str): ID of Apify crawler
             session (requests.Session object): used to send the HTTP requests (default: new session)
             config (str, path-like): path to JSON file with user ID and token
-    """
+        """
         super().__init__(session, config)
         self._crawler_id = crawler_id
         self._base_url = 'https://api.apify.com/v1/' + \
             self.get_user_id() + '/crawlers/' + self.get_crawler_id()
 
-    def __init__(self, crawler_id, session=requests.session()):
-        try:
-            with open(os.path.join(FILE_LOCATION, 'apify_config.json')) as f:
-                data = json.load(f)
-                self.user_id = data['user']
-                self.token = data['token']
-                self.session = session
-        except FileNotFoundError:
-            print("apify_config.json not found. Creating it now...")
-            self.user_id = input("Please enter your Apify user_id: ")
-            self.token = input("Please enter your Apify API token: ")
-            with open(os.path.join(FILE_LOCATION, 'apify_config.json', 'w')) as f:
-                data = {"token": self.token, "user": self.user_id}
-                json.dump(data, f)
-                f.write("\n")
+    def start(self, settings={}, **kwargs):
+        """Executes crawler
+        https://www.apify.com/docs/api/v1#/reference/executions/start-execution/start-execution
 
-        self.crawler_id = crawler_id
-        self.base_url = 'https://api.apify.com/v1/' + \
-            self.user_id + '/crawlers/' + crawler_id
+        Args:
+            settings (JSON object): custom settings to use (default: {})
+        kwargs:
+            tag (str): custom tag for the execution. Cannot be longer than 64 characters (default: None)
+            wait (int): max. number of seconds the server waits for execution to finish (default: 0)
 
-    def run(self, timeout=600, settings={}, verbose=False):
+        Returns:
+            execution_details (JSON object): execution details
         """
-        Sends POST request to Apify server to run the crawler
-        Returns Server Response
-        """
-        url = self.base_url + '/execute'
-        if verbose:
-            print("Running crawler", self.crawler_id)
-        r = self.session.post(url, params={"token": self.token, "wait": timeout}, json=settings)
+        if len(kwargs.get("tag", "")) > 64:
+            raise ValueError("tag cannot be longer than 64 characters")
+        url = self._base_url + '/execute'
+        kwargs.setdefault("token", self.get_token())
+        r = self.get_session().post(url, params=kwargs, json=settings)
+        r.raise_for_status()
         status = r.json()["status"]
         if status == "RUNNING":
-            # Check status every 2 min.
-            time_elapsed = min(timeout, 120)
-            time_left = timeout - time_elapsed
+            # Check status every minute
+            wait = kwargs.get("wait", 0)
+            time_elapsed = min(wait, 120)
+            time_left = wait - time_elapsed
             details_url = r.json()["detailsUrl"]
             while time_left > 0 and status == "RUNNING":
+                sleep = min(time_left, 60)
+                time.sleep(sleep)
+                status = self.get_session().get(details_url).json()["status"]
+        r.raise_for_status()
+        return r.json()
 
     def get_last_execution(self, **kwargs):
         """Gets information about the crawler's last execution
@@ -268,16 +263,16 @@ class Execution(CrawlerABC):
             if combine:
                 simplified = kwargs.get("simplified", 0)
                 if simplified == 0:
-        result = list(
+                    result = list(
                         r["pageFunctionResult"]
                         for r in result if r["pageFunctionResult"] is not None
-        )
+                    )
                 elif simplified == 1:
                     result = list(r for r in result if r is not None)
 
-        if len(result) > 0:
-            if isinstance(result[0], list):
-                result = list(itertools.chain.from_iterable(result))
+                if len(result) > 0:
+                    if isinstance(result[0], list):
+                        result = list(itertools.chain.from_iterable(result))
 
         else:
             result = r.text
@@ -309,4 +304,3 @@ class Execution(CrawlerABC):
     def get_execution_id(self):
         """Returns: execution_id (str): crawler ID"""
         return self._execution_id
-    
