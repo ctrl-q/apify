@@ -140,6 +140,23 @@ class Crawler(CrawlerABC):
         r = self.get_session().delete(self._base_url, params={"token": self.get_token()})
         r.raise_for_status()
 
+    def get_settings(self, **kwargs):
+        """Gets full details and settings of a specific crawler
+        https://www.apify.com/docs/api/v1#/reference/crawlers/crawler-settings/get-crawler-settings
+
+        Args:
+        kwargs:
+            noSecrets (int): If 1, response will not contain sensitive data like auth tokens (default: 0)
+            executionId (str): execution ID for which to return the settings (default: current settings)
+
+        Returns:
+            settings (JSON object): crawler settings
+        """
+        kwargs.setdefault("token", self.get_token())
+        r = self.get_session().get(self._base_url, params=kwargs)
+        r.raise_for_status()
+        return r.json()
+
 class Execution(CrawlerABC):
     def __init__(self, execution_id, session=requests.session(), config="apify_config.json"):
         """Class for interacting with Apify executions
