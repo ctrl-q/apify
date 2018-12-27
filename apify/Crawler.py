@@ -191,6 +191,21 @@ class Crawler(CrawlerABC):
         r.raise_for_status()
         return r.json()
 
+    def stop_last_execution(self, execution_id):
+        """Stops a specific crawler execution
+        https://www.apify.com/docs/api/v1#/reference/executions/start-execution/stop-execution
+
+        Args:
+            execution_id (str): ID of execution to be stopped
+
+        Returns:
+            execution_details (JSON object): execution details
+        """
+        execution_id = self.get_last_execution(status=status)["_id"]
+        execution = Execution(execution_id, session=self.get_session(), config=self._config)
+        return execution.stop()
+
+    def get_crawler_id(self):
 class Execution(CrawlerABC):
     def __init__(self, execution_id, session=requests.session(), config="apify_config.json"):
         """Class for interacting with Apify executions
