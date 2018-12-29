@@ -22,6 +22,24 @@ def create_crawler(session=requests.session(), config="apify_config.json", setti
     return r.json()
 
 
+def create_actor(session=requests.session(), config="apify_config.json", settings={}, **kwargs):
+    """Creates actor with specified settings
+    https://www.apify.com/docs/api/v2#/reference/actors/actor-collection/create-actor
+
+    Args:
+        session (requests.Session object): used to send the HTTP requests (default: new session)
+        config (str, path-like): path to JSON file with user ID and token
+        settings (JSON object): crawler settings
+    kwargs:
+        my (bool) : if True, only actors owned by the user are returned (default: False)
+
+    Returns:
+        actor (JSON object): actor
+    """
+    user_id, token = common._get_auth(config)
+    url = "https://api.apify.com/v2/acts"
+    kwargs.setdefault("token", token)
+    r = session.post(url, params=kwargs, json=settings)
     common.raise_for_status(r)
     return r.json()
 
