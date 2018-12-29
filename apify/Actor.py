@@ -2,7 +2,7 @@ import requests
 
 from .ApifyABC import ApifyABC
 
-
+# TODO MOVE COMMON FUNCTIONS BETWEEN OBJECTS TO APIFYABC AND JUST CHANGE DOCSTRINGS
 class Actor(ApifyABC):
     def __init__(self, actor_id, session=requests.session(), config="apify_config.json"):
         """Class for interacting with Apify crawlers
@@ -45,3 +45,10 @@ class Actor(ApifyABC):
         r = self.get_session().put(self._base_url, params={"token": self.get_token()}, json=settings)
         r.raise_for_status()
         return r.json()
+
+    def delete(self):
+        """Deletes the actor
+        https://www.apify.com/docs/api/v2#/reference/actors/actor-object/delete-actor
+        """
+        r = self.get_session().delete(self._base_url, params={"token": self.get_token()})
+        r.raise_for_status()
