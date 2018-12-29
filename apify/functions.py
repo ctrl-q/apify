@@ -89,3 +89,26 @@ def get_list_of_actors(session=requests.session(), config="apify_config.json", *
     r = session.get(url, params=kwargs)
     common.raise_for_status(r)
     return r.json()
+
+
+def get_list_of_tasks(session=requests.session(), config="apify_config.json", **kwargs):
+    """Gets list of tasks a user created or used
+    https://www.apify.com/docs/api/v2#/reference/actor-tasks/tasks-collection/get-a-list-of-tasks
+
+    Args:
+        session (requests.Session object): used to send the HTTP requests (default: new session)
+        config (str, path-like): path to JSON file with user ID and token
+    kwargs:
+        offset (int): rank of first request to return (default: 0)
+        limit (int): maximum number of page results to return (default: 10000)
+        desc (int): If 1, executions are sorted from newest to oldest (default: None)
+
+    Returns:
+        actor_list (JSON object): basic information about each crawler
+    """
+    user_id, token = common._get_auth(config)
+    url = "https://api.apify.com/v2/actor-tasks"
+    kwargs.setdefault("token", token)
+    r = session.get(url, params=kwargs)
+    common.raise_for_status(r)
+    return r.json()
