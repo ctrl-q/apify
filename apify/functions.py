@@ -40,7 +40,22 @@ def create_actor(session=requests.session(), config="apify_config.json", setting
     url = "https://api.apify.com/v2/acts"
     kwargs.setdefault("token", token)
     r = session.post(url, params=kwargs, json=settings)
-    common.raise_for_status(r)
+def create_task(session=requests.session(), config="apify_config.json", settings={}):
+    """Creates task with specified settings
+    https://www.apify.com/docs/api/v2#/reference/actor-tasks/tasks-collection/create-a-task
+
+    Args:
+        session (requests.Session object): used to send the HTTP requests (default: new session)
+        config (str, path-like): path to JSON file with user ID and token
+        settings (JSON object): crawler settings
+
+    Returns:
+        task (JSON object): actor task
+    """
+    user_id, token = common._get_auth(config)
+    url = "https://api.apify.com/v2/actor-tasks"
+    r = session.post(url, params={"token": token}, json=settings)
+    r.raise_for_status()
     return r.json()
 
 
