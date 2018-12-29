@@ -3,6 +3,7 @@ import requests
 from .ApifyABC import ApifyABC
 
 # TODO MOVE COMMON FUNCTIONS BETWEEN OBJECTS TO APIFYABC AND JUST CHANGE DOCSTRINGS
+# TODO MOVE ALL FUNCTIONS THAT JUST TO GET/POST/PUT(URL) AND RETURN R.JSON() TO ONE COMMON FUNCTION WITH URL & METHOD AS PARAMS
 class Actor(ApifyABC):
     def __init__(self, actor_id, session=requests.session(), config="apify_config.json"):
         """Class for interacting with Apify crawlers
@@ -65,3 +66,12 @@ class Actor(ApifyABC):
         return r.json()
 
     def create_version(self):
+        """Creates actor version
+
+        Returns:
+            actor_version (JSON object): basic information about the version
+        """
+        url = self._base_url + "/versions"
+        r = self.get_session().post(url, params={"token": self.get_token()})
+        r.raise_for_status()
+        return r.json()
