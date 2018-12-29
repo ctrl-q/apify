@@ -52,3 +52,16 @@ class Actor(ApifyABC):
         """
         r = self.get_session().delete(self._base_url, params={"token": self.get_token()})
         r.raise_for_status()
+
+    def get_list_of_versions(self):
+        """Gets list of actor versions
+
+        Returns:
+            version_list (JSON object): basic information about each version
+        """
+        url = self._base_url + "/versions"
+        r = self.get_session().get(url, params={"token": self.get_token()})
+        r.raise_for_status()
+        return r.json()
+
+    def create_version(self):
