@@ -17,7 +17,11 @@ def create_crawler(session=requests.session(), config="apify_config.json", setti
     """
     user_id, token = common._get_auth(config)
     url = "https://api.apify.com/v1/" + user_id + "/crawlers"
-    r = session.get(url, params={"token": token}, json=settings)
+    r = session.post(url, params={"token": token}, json=settings)
+    common.raise_for_status(r)
+    return r.json()
+
+
     common.raise_for_status(r)
     return r.json()
 
