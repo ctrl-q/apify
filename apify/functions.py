@@ -62,7 +62,7 @@ def get_list_of_actors(session=requests.session(), config="apify_config.json", *
         actor_list (JSON object): basic information about each crawler
     """
     user_id, token = common._get_auth(config)
-    url = "https://api.apify.com/v1/" + user_id + "/crawlers"
+    url = "https://api.apify.com/v2/acts"
     kwargs.setdefault("token", token)
     r = session.get(url, params=kwargs)
     common.raise_for_status(r)
