@@ -3,6 +3,25 @@ import requests
 from . import common
 
 
+def create_crawler(session=requests.session(), config="apify_config.json", settings={}):
+    """Gets a list of crawlers belonging to a specific user
+    https://www.apify.com/docs/api/v1#/reference/results/create-crawler
+
+    Args:
+        session (requests.Session object): used to send the HTTP requests (default: new session)
+        config (str, path-like): path to JSON file with user ID and token
+        settings (JSON object): crawler settings
+
+    Returns:
+        crawler_settings (JSON object): crawler settings
+    """
+    user_id, token = common._get_auth(config)
+    url = "https://api.apify.com/v1/" + user_id + "/crawlers"
+    r = session.get(url, params={"token": token}, json=settings)
+    common.raise_for_status(r)
+    return r.json()
+
+
 def get_list_of_crawlers(session=requests.session(), config="apify_config.json", **kwargs):
     """Gets a list of crawlers belonging to a specific user
     https://www.apify.com/docs/api/v1#/reference/crawlers/list-of-crawlers/get-list-of-crawlers
