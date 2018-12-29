@@ -31,3 +31,17 @@ class Actor(ApifyABC):
         r = self.get_session().get(self._base_url, params={"token": self.get_token()})
         r.raise_for_status()
         return r.json()
+
+    def update(self, settings={}):
+        """Updates actor settings
+        https://www.apify.com/docs/api/v2#/reference/actors/actor-object/update-actor
+
+        Args:
+            settings (JSON object): settings to be updated
+
+        Returns:
+            settings (JSON object): new crawler settings
+        """
+        r = self.get_session().put(self._base_url, params={"token": self.get_token()}, json=settings)
+        r.raise_for_status()
+        return r.json()
