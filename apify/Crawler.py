@@ -4,33 +4,14 @@ import urllib.request
 
 import requests
 
-from . import common
+from .ApifyABC import ApifyABC
 
 
-class CrawlerABC:
-    def __init__(self, session, config):
-        self._user_id, self._token = common._get_auth(config)
-        self.set_session(session)
-        self._config = config
-
-    def get_session(self):
-        """Returns: session (requests.Session): session used for requests"""
-        return self._session
-
-    def get_token(self):
-        """Returns: token (str): API token"""
-        return self._token
+class CrawlerABC(ApifyABC):
 
     def get_user_id(self):
         """Returns: user_id (str): API user ID"""
         return self._user_id
-
-    def set_session(self, session):
-        """Changes the session object used for requests
-        Args:
-            session (requests.Session): session used for requests
-        """
-        self._session = session
 
 
 class Crawler(CrawlerABC):
