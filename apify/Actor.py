@@ -20,3 +20,14 @@ class Actor(ApifyABC):
     def get_actor_id(self):
         """Returns: actor_id (str): actor ID"""
         return self._actor_id
+
+    def get_details(self):
+        """Gets actor details
+        https://www.apify.com/docs/api/v2#/reference/actors/actor-object/get-actor
+
+        Returns:
+            actor_details (JSON object): actor details
+        """
+        r = self.get_session().get(self._base_url, params={"token": self.get_token()})
+        r.raise_for_status()
+        return r.json()
