@@ -4,7 +4,7 @@ from . import common
 
 
 def create_crawler(session=requests.session(), config="apify_config.json", settings={}):
-    """Gets a list of crawlers belonging to a specific user
+    """Creates crawler with specified settings
     https://www.apify.com/docs/api/v1#/reference/results/create-crawler
 
     Args:
@@ -53,7 +53,7 @@ def get_list_of_actors(session=requests.session(), config="apify_config.json", *
         session (requests.Session object): used to send the HTTP requests (default: new session)
         config (str, path-like): path to JSON file with user ID and token
     kwargs:
-        my (int): if 1, only actors owned by the user are returned (default: 0)
+        my (bool): if True, only actors owned by the user are returned (default: False)
         offset (int): rank of first request to return (default: 0)
         limit (int): maximum number of page results to return (default: 10000)
         desc (int): If 1, executions are sorted from newest to oldest (default: None)
