@@ -7,7 +7,7 @@ from .ApifyABC import ApifyABC
 class Actor(ApifyABC):
     def __init__(self, actor_id, session=requests.session(), config="apify_config.json"):
         """Class for interacting with Apify crawlers
-        https://www.apify.com/docs/api/v1#/reference/crawlers
+        https://www.apify.com/docs/api/v2#/reference/actors
 
         Args:
             actor_id (str): actor ID or <username>~<actor name>
@@ -56,6 +56,7 @@ class Actor(ApifyABC):
 
     def get_list_of_versions(self):
         """Gets list of actor versions
+        https://www.apify.com/docs/api/v2#/reference/actors/version-collection/get-list-of-versions
 
         Returns:
             version_list (JSON object): basic information about each version
@@ -67,6 +68,7 @@ class Actor(ApifyABC):
 
     def create_version(self):
         """Creates actor version
+        https://www.apify.com/docs/api/v2#/reference/actors/version-collection/create-version
 
         Returns:
             actor_version (JSON object): basic information about the version
