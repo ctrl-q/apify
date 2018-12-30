@@ -130,3 +130,7 @@ class ActorTask(ApifyABC):
             settings (JSON object): new task settings
         """
 
+    def delete(self):
+        """Deletes the task
+        https://www.apify.com/docs/api/v2#/reference/actor-tasks/task-object/delete-task
+        """
