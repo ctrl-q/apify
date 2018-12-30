@@ -113,8 +113,6 @@ class Crawler(CrawlerABC):
         """Deletes the crawler
         https://www.apify.com/docs/api/v1#/reference/crawlers/crawler-settings/delete-crawler
         """
-        r = self.get_session().delete(self._base_url, params={"token": self.get_token()})
-        r.raise_for_status()
 
     def get_settings(self, **kwargs):
         """Gets full details and settings of a specific crawler
@@ -128,10 +126,7 @@ class Crawler(CrawlerABC):
         Returns:
             settings (JSON object): crawler settings
         """
-        kwargs.setdefault("token", self.get_token())
-        r = self.get_session().get(self._base_url, params=kwargs)
-        r.raise_for_status()
-        return r.json()
+        return super().get()
 
     def update_settings(self, settings={}):
         """Updates a specific crawler's settings
@@ -143,9 +138,7 @@ class Crawler(CrawlerABC):
         Returns:
             settings (JSON object): new crawler settings
         """
-        r = self.get_session().put(self._base_url, params={"token": self.get_token()}, json=settings)
-        r.raise_for_status()
-        return r.json()
+        return super().put(data=settings)
 
     def get_list_of_executions(self, **kwargs):
         """Gets the crawler's list of executions
@@ -162,10 +155,7 @@ class Crawler(CrawlerABC):
             execution_list (JSON object): list of executions and their metadata
         """
         url = self._base_url + "/execs"
-        kwargs.setdefault("token", self.get_token())
-        r = self.get_session().get(url, params=kwargs)
-        r.raise_for_status()
-        return r.json()
+        return super().get(url, None, **kwargs)
 
     def stop_last_execution(self, execution_id):
         """Stops a specific crawler execution
@@ -267,9 +257,7 @@ class Execution(CrawlerABC):
             execution_details (JSON object): execution details
         """
         url = self._base_url + "/stop"
-        r = self.get_session().post(url, params={"token": self.get_token()})
-        r.raise_for_status()
-        return r.json()
+        return super().post(url)
 
     def get_details(self):
         """Gets execution details
@@ -278,9 +266,7 @@ class Execution(CrawlerABC):
         Returns:
             execution_details (JSON object): execution details
         """
-        r = self.get_session().get(self._base_url, params={"token": self.get_token()})
-        r.raise_for_status()
-        return r.json()
+        return super().get()
 
     def get_execution_id(self):
         """Returns: execution_id (str): crawler ID"""
