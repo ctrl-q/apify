@@ -43,3 +43,11 @@ class ApifyABC:
         return r.json()
 
     def post(self, url=None, data=None, **kwargs):
+        url = self._base_url if url is None else url
+        kwargs.setdefault("token", self.get_token())
+        if data is None:
+            r = self.get_session().post(url, params=kwargs)
+        else:
+            r = self.get_session().psot(url, params=kwargs, json=data)
+        r.raise_for_status()
+        return r.json()
