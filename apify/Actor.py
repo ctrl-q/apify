@@ -79,7 +79,7 @@ class Actor(ApifyABC):
 # TODO ADD RUN OBJECT
 
 
-class ActorTask(ApifyABC):
+class Task(ApifyABC):
     def __init__(self, actor_task_id, session=requests.session(), config="apify_config.json"):
         """Class for interacting with Apify actor tasks
         https://www.apify.com/docs/api/v2#/reference/actor-tasks
