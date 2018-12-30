@@ -21,3 +21,8 @@ class ApifyABC:
             session (requests.Session): session used for requests
         """
         self._session = session
+
+    def delete(self):
+        r = self.get_session().delete(self._base_url, params={"token": self.get_token()})
+        r.raise_for_status()
+
