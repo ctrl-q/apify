@@ -134,3 +134,23 @@ class ActorTask(ApifyABC):
         """Deletes the task
         https://www.apify.com/docs/api/v2#/reference/actor-tasks/task-object/delete-task
         """
+
+    def get_list_of_runs(self, **kwargs):
+        """Gets the task's list of runs
+        https://www.apify.com/docs/api/v2#/reference/actor-tasks/runs-collection/get-a-list-of-runs
+
+        Args:
+        kwargs:
+            offset (int): Rank of first execution to return (default: 0)
+            limit (int): Maximum number of executions to return (default: 1000)
+            desc (int): If 1, executions are sorted from newest to oldest (default: None)
+
+        Returns:
+            run_list (JSON object): list of runs and their metadata
+        """
+        url = self._base_url + "/runs"
+        kwargs.setdefault("token", self.get_token())
+        r = self.get_session().get(url, params=kwargs)
+        r.raise_for_status()
+        return r.json()
+
