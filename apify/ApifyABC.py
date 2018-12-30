@@ -26,3 +26,13 @@ class ApifyABC:
         r = self.get_session().delete(self._base_url, params={"token": self.get_token()})
         r.raise_for_status()
 
+    def get(self, url=None, data=None, **kwargs):
+        url = self._base_url if url is None else url
+        kwargs.setdefault("token", self.get_token())
+        if data is None:
+            r = self.get_session().get(url, params=kwargs)
+        else:
+            r = self.get_session().get(url, params=kwargs, json=data)
+        r.raise_for_status()
+        return r.json()
+
