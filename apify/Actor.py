@@ -58,9 +58,7 @@ class Actor(ApifyABC):
             version_list (JSON object): basic information about each version
         """
         url = self._base_url + "/versions"
-        r = self.get_session().get(url, params={"token": self.get_token()})
-        r.raise_for_status()
-        return r.json()
+        return super().get(url)
 
     def create_version(self):
         """Creates actor version
@@ -70,9 +68,7 @@ class Actor(ApifyABC):
             actor_version (JSON object): basic information about the version
         """
         url = self._base_url + "/versions"
-        r = self.get_session().post(url, params={"token": self.get_token()})
-        r.raise_for_status()
-        return r.json()
+        return super().post(url)
 
 # TODO ADD VERSION OBJECT
 # TODO ADD BUILD OBJECT
