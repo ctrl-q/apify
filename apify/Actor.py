@@ -31,6 +31,7 @@ class Actor(ApifyABC):
         Returns:
             actor_details (JSON object): actor details
         """
+        return super().get()
 
     def update(self, settings={}):
         """Updates actor settings
@@ -42,6 +43,7 @@ class Actor(ApifyABC):
         Returns:
             settings (JSON object): new actor settings
         """
+        return super().put(data=settings)
 
     def delete(self):
         """Deletes the actor
@@ -102,6 +104,7 @@ class ActorTask(ApifyABC):
         Returns:
             task_details (JSON object): actor details
         """
+        return super().get()
 
     def update(self, settings={}):
         """Updates task settings
@@ -113,6 +116,7 @@ class ActorTask(ApifyABC):
         Returns:
             settings (JSON object): new task settings
         """
+        return super().put(data=settings)
 
     def delete(self):
         """Deletes the task
@@ -133,10 +137,7 @@ class ActorTask(ApifyABC):
             run_list (JSON object): list of runs and their metadata
         """
         url = self._base_url + "/runs"
-        kwargs.setdefault("token", self.get_token())
-        r = self.get_session().get(url, params=kwargs)
-        r.raise_for_status()
-        return r.json()
+        return super().get(url, None, **kwargs)
 
 
     def run_synchronously(self, input_={}, **kwargs):
@@ -149,7 +150,4 @@ class ActorTask(ApifyABC):
             outputRecordKey (str): key to return from default key-value store (default: 'OUTPUT')
         """
         url = self._base_url + "/run-sync"
-        kwargs.setdefault("token", self.get_token())
-        r = self.get_session().post(url, params=kwargs, json=input_)
-        r.raise_for_status()
-        return r.json()
+        return super().get(url, input_, **kwargs)
