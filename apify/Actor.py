@@ -4,6 +4,14 @@ from .ApifyABC import ApifyABC
 
 # TODO MOVE COMMON FUNCTIONS BETWEEN OBJECTS TO APIFYABC AND JUST CHANGE DOCSTRINGS
 # TODO MOVE ALL FUNCTIONS THAT JUST TO GET/POST/PUT(URL) AND RETURN R.JSON() TO ONE COMMON FUNCTION WITH URL & METHOD AS PARAMS
+
+class ActorABC(ApifyABC):
+
+    def get_details(self):
+        r = self.get_session().get(self._base_url, params={"token": self.get_token()})
+        r.raise_for_status()
+        return r.json()        
+
 class Actor(ApifyABC):
     def __init__(self, actor_id, session=requests.session(), config="apify_config.json"):
         """Class for interacting with Apify crawlers
