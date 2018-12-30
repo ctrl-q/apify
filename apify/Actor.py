@@ -3,23 +3,7 @@ import requests
 from .ApifyABC import ApifyABC
 
 # TODO MOVE COMMON FUNCTIONS BETWEEN OBJECTS TO APIFYABC AND JUST CHANGE DOCSTRINGS
-# TODO MOVE ALL FUNCTIONS THAT JUST TO GET/POST/PUT(URL) AND RETURN R.JSON() TO ONE COMMON FUNCTION WITH URL & METHOD AS PARAMS
-
-class ActorABC(ApifyABC):
-
-    def get_details(self):
-        r = self.get_session().get(self._base_url, params={"token": self.get_token()})
-        r.raise_for_status()
-        return r.json()
-
-    def update(self, settings={}):
-        r = self.get_session().put(self._base_url, params={"token": self.get_token()}, json=settings)
-        r.raise_for_status()
-        return r.json()
-
-    def delete(self):
-        r = self.get_session().delete(self._base_url, params={"token": self.get_token()})
-        r.raise_for_status()
+# TODO ONCE ALL IS FINISHED, REORDER FUNCTIONS ALPHABETICALLY
 
 
 class Actor(ApifyABC):
