@@ -10,11 +10,21 @@ class ActorABC(ApifyABC):
     def get_details(self):
         r = self.get_session().get(self._base_url, params={"token": self.get_token()})
         r.raise_for_status()
-        return r.json()        
+        return r.json()
+
+    def update(self, settings={}):
+        r = self.get_session().put(self._base_url, params={"token": self.get_token()}, json=settings)
+        r.raise_for_status()
+        return r.json()
+
+    def delete(self):
+        r = self.get_session().delete(self._base_url, params={"token": self.get_token()})
+        r.raise_for_status()
+
 
 class Actor(ApifyABC):
     def __init__(self, actor_id, session=requests.session(), config="apify_config.json"):
-        """Class for interacting with Apify crawlers
+        """Class for interacting with Apify actors
         https://www.apify.com/docs/api/v2#/reference/actors
 
         Args:
@@ -37,9 +47,6 @@ class Actor(ApifyABC):
         Returns:
             actor_details (JSON object): actor details
         """
-        r = self.get_session().get(self._base_url, params={"token": self.get_token()})
-        r.raise_for_status()
-        return r.json()
 
     def update(self, settings={}):
         """Updates actor settings
@@ -49,18 +56,13 @@ class Actor(ApifyABC):
             settings (JSON object): settings to be updated
 
         Returns:
-            settings (JSON object): new crawler settings
+            settings (JSON object): new actor settings
         """
-        r = self.get_session().put(self._base_url, params={"token": self.get_token()}, json=settings)
-        r.raise_for_status()
-        return r.json()
 
     def delete(self):
         """Deletes the actor
         https://www.apify.com/docs/api/v2#/reference/actors/actor-object/delete-actor
         """
-        r = self.get_session().delete(self._base_url, params={"token": self.get_token()})
-        r.raise_for_status()
 
     def get_list_of_versions(self):
         """Gets list of actor versions
