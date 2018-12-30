@@ -154,3 +154,18 @@ class ActorTask(ApifyABC):
         r.raise_for_status()
         return r.json()
 
+
+    def run_synchronously(self, input_={}, **kwargs):
+        """Runs task and returns its output
+        https://www.apify.com/docs/api/v2#/reference/actor-tasks/run-task-synchronously/run-task-synchronously
+
+        Args:
+            input_ (JSON object): custom input fields (default: None)
+        kwargs:
+            outputRecordKey (str): key to return from default key-value store (default: 'OUTPUT')
+        """
+        url = self._base_url + "/run-sync"
+        kwargs.setdefault("token", self.get_token())
+        r = self.get_session().post(url, params=kwargs, json=input_)
+        r.raise_for_status()
+        return r.json()
