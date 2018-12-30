@@ -110,3 +110,12 @@ class ActorTask(ApifyABC):
     def get_actor_task_id(self):
         """Returns: actor_task_id (str): actor task ID"""
         return self._actor_task_id
+
+    def get_details(self):
+        """Gets task details
+        https://www.apify.com/docs/api/v2#/reference/actor-tasks/task-object/get-task
+
+        Returns:
+            task_details (JSON object): actor details
+        """
+
