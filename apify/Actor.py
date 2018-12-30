@@ -119,3 +119,14 @@ class ActorTask(ApifyABC):
             task_details (JSON object): actor details
         """
 
+    def update(self, settings={}):
+        """Updates task settings
+        https://www.apify.com/docs/api/v2#/reference/actor-tasks/task-object/update-task
+
+        Args:
+            settings (JSON object): settings to be updated
+
+        Returns:
+            settings (JSON object): new task settings
+        """
+
