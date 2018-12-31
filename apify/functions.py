@@ -80,10 +80,7 @@ def get_list_of_crawlers(session=requests.session(), config="apify_config.json",
     """
     user_id, token = common._get_auth(config)
     url = "https://api.apify.com/v1/" + user_id + "/crawlers"
-    kwargs.setdefault("token", token)
-    r = session.get(url, params=kwargs)
-    r.raise_for_status()
-    return r.json()
+    return common._get_list(url, session, config, **kwargs)
 
 
 def get_list_of_actors(session=requests.session(), config="apify_config.json", **kwargs):
@@ -102,12 +99,8 @@ def get_list_of_actors(session=requests.session(), config="apify_config.json", *
     Returns:
         actor_list (JSON object): basic information about each crawler
     """
-    user_id, token = common._get_auth(config)
     url = "https://api.apify.com/v2/acts"
-    kwargs.setdefault("token", token)
-    r = session.get(url, params=kwargs)
-    r.raise_for_status()
-    return r.json()
+    return common._get_list(url, session, config, **kwargs)
 
 
 def get_list_of_key_value_stores(session=requests.session(), config="apify_config.json", **kwargs):
@@ -126,12 +119,8 @@ def get_list_of_key_value_stores(session=requests.session(), config="apify_confi
     Returns:
         kv_list (JSON object): basic information about each key-value store
     """
-    user_id, token = common._get_auth(config)
     url = "https://api.apify.com/v2/key-value-stores"
-    kwargs.setdefault("token", token)
-    r = session.get(url, params=kwargs)
-    r.raise_for_status()
-    return r.json()
+    return common._get_list(url, session, config, **kwargs)
 
 
 def get_list_of_tasks(session=requests.session(), config="apify_config.json", **kwargs):
@@ -149,9 +138,5 @@ def get_list_of_tasks(session=requests.session(), config="apify_config.json", **
     Returns:
         actor_list (JSON object): basic information about each crawler
     """
-    user_id, token = common._get_auth(config)
     url = "https://api.apify.com/v2/actor-tasks"
-    kwargs.setdefault("token", token)
-    r = session.get(url, params=kwargs)
-    r.raise_for_status()
-    return r.json()
+    return common._get_list(url, session, config, **kwargs)

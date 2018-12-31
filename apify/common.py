@@ -13,3 +13,21 @@ def _get_auth(config):
     with open(config) as f:
         data = json.load(f)
         return data['user'], data['token']
+
+
+def _get_list(url, session, config, **kwargs):
+    """Gets list of items
+    Args:
+        url (str): url to get
+        session (requests.Session object): used to send the HTTP requests (default: new session)
+        config (str, path-like): path to JSON file with user ID and token
+        kwargs
+
+    Returns:
+        list_of_items (JSON object): basic information about each object
+    """
+    user_id, token = _get_auth(config)
+    kwargs.setdefault("token", token)
+    r = session.get(url, params=kwargs)
+    r.raise_for_status()
+    return r.json()
