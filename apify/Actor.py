@@ -26,6 +26,7 @@ class Actor(ActorABC):
             session (requests.Session object): used to send the HTTP requests (default: new session)
             config (str, path-like): path to JSON file with user ID and token
         """
+        super().__init__(actor_id, session, config)
 
     def build_actor(self, version, **kwargs):
         """Builds an actor
@@ -77,7 +78,7 @@ class Actor(ActorABC):
                 Returns:
                     actor_build_details (JSON object): actor build details
                 """
-                return super().get_details
+                return super().get(None, None, **kwargs)
 
             def abort(self):
                 url = self._base_url.replace(self.get_build_id(), "abort" + self.get_build_id())
@@ -163,6 +164,7 @@ class Actor(ActorABC):
                 Returns:
                     actor_version_details (JSON object): actor version details
                 """
+                return super().get()
 
             def update(self, settings={}):
                 """Updates actor version settings
@@ -174,10 +176,13 @@ class Actor(ActorABC):
                 Returns:
                     settings (JSON object): new actor version settings
                 """
+                return super().put(data=settings)
+
             def delete(self):
                 """Deletes the actor version
                 https://www.apify.com/docs/api/v2#/reference/actors/version-object/delete-version
                 """
+                return super().delete()
 
         return Version(self.get_actor_id(), version_number, self.get_session(), self._config)
 
@@ -238,6 +243,7 @@ class Task(ApifyABC):
         """Deletes the task
         https://www.apify.com/docs/api/v2#/reference/actor-tasks/task-object/delete-task
         """
+        return super().delete()
 
     def get_list_of_runs(self, **kwargs):
         """Gets the task's list of runs
