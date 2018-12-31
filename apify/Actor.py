@@ -108,6 +108,11 @@ class Actor(ApifyABC):
                 Returns:
                     settings (JSON object): new actor version settings
                 """
+            def delete(self):
+                """Deletes the actor version
+                https://www.apify.com/docs/api/v2#/reference/actors/version-object/delete-version
+                """
+
         return Version(self.get_actor_id(), version_number, self.get_session(), self._config)
 
 
