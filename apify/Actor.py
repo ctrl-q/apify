@@ -89,6 +89,15 @@ class Actor(ApifyABC):
                 """Returns: version_number (str): actor version number
                 """
                 return self._version_number
+
+            def get_details(self):
+                """Gets actor version details
+                https://www.apify.com/docs/api/v2#/reference/actors/version-object/get-version
+
+                Returns:
+                    actor_version_details (JSON object): actor version details
+                """
+
         return Version(self.get_actor_id(), version_number, self.get_session(), self._config)
 
 
