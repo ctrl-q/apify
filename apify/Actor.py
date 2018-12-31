@@ -98,6 +98,16 @@ class Actor(ApifyABC):
                     actor_version_details (JSON object): actor version details
                 """
 
+            def update(self, settings={}):
+                """Updates actor version settings
+                https://www.apify.com/docs/api/v2#/reference/actors/version-object/update-version
+
+                Args:
+                    settings (JSON object): settings to be updated
+
+                Returns:
+                    settings (JSON object): new actor version settings
+                """
         return Version(self.get_actor_id(), version_number, self.get_session(), self._config)
 
 
