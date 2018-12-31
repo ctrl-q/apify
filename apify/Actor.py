@@ -157,44 +157,6 @@ class Actor(ActorABC):
         Returns:
             actor_version (Actor.Version)
         """
-        class _Version(ActorABC):
-            def __init__(self, actor_id, version_number, session, config):
-                super().__init__(actor_id, session, config)
-                self._version_number = version_number
-                self._base_url += "versions/" + self.get_version_number()
-
-            def get_version_number(self):
-                """Returns: version_number (str): actor version number
-                """
-                return self._version_number
-
-            def get(self):
-                """Gets actor version details
-                https://www.apify.com/docs/api/v2#/reference/actors/version-object/get-version
-
-                Returns:
-                    actor_version_details (JSON object): actor version details
-                """
-                return super().get()
-
-            def update(self, settings={}):
-                """Updates actor version settings
-                https://www.apify.com/docs/api/v2#/reference/actors/version-object/update-version
-
-                Args:
-                    settings (JSON object): settings to be updated
-
-                Returns:
-                    settings (JSON object): new actor version settings
-                """
-                return super().put(data=settings)
-
-            def delete(self):
-                """Deletes the actor version
-                https://www.apify.com/docs/api/v2#/reference/actors/version-object/delete-version
-                """
-                return super().delete()
-
         return _Version(self.get_actor_id(), version_number, self.get_session(), self._config)
 
     def update(self, settings={}):
@@ -314,4 +276,40 @@ class _Build(ActorABC):
         url = self._base_url.replace(self.get_build_id(), "abort" + self.get_build_id())
         return super().post(url)
 
-class 
+
+class _Version(ActorABC):
+    def __init__(self, actor_id, version_number, session, config):
+        super().__init__(actor_id, session, config)
+        self._version_number = version_number
+        self._base_url += "versions/" + self.get_version_number()
+
+    def get_version_number(self):
+        """Returns: version_number (str): actor version number"""
+        return self._version_number
+
+    def get(self):
+        """Gets actor version details
+        https://www.apify.com/docs/api/v2#/reference/actors/version-object/get-version
+
+        Returns:
+            actor_version_details (JSON object): actor version details
+        """
+        return super().get()
+
+    def update(self, settings={}):
+        """Updates actor version settings
+        https://www.apify.com/docs/api/v2#/reference/actors/version-object/update-version
+
+        Args:
+            settings (JSON object): settings to be updated
+
+        Returns:
+            settings (JSON object): new actor version settings
+        """
+        return super().put(data=settings)
+
+    def delete(self):
+        """Deletes the actor version
+        https://www.apify.com/docs/api/v2#/reference/actors/version-object/delete-version
+        """
+        return super().delete()
