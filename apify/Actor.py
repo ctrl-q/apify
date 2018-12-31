@@ -111,6 +111,16 @@ class Actor(ActorABC):
         url = self._base_url + "/versions"
         return super().post(url)
 
+    def Run(self, run_id):
+        """Class for interacting with Apify actor runs
+        https://www.apify.com/docs/api/v2#/reference/actors/run-object
+
+        Args:
+            run_number (str): actor version number
+        Returns:
+            actor_run (Actor.Run): actor run
+        """
+
     def run(self, input_={}, **kwargs):
         """Runs actor asynchronously
         https://www.apify.com/docs/api/v2#/reference/actors/run-collection/run-actor
@@ -170,7 +180,6 @@ class Actor(ActorABC):
             settings (JSON object): new actor settings
         """
         return super().put(data=settings)
-# TODO ADD RUN OBJECT
 
 
 class Task(ApifyABC):
@@ -274,6 +283,39 @@ class _Build(ActorABC):
 
     def abort(self):
         url = self._base_url.replace(self.get_build_id(), "abort" + self.get_build_id())
+        return super().post(url)
+
+
+class _Run(ActorABC):
+    def __init__(self, actor_id, run_id, session, config):
+        super().__init__(actor_id, session, config)
+        self._run_id = run_id
+        self._base_url += "/runs/" + self.get_run_id()
+
+    def get_run_id(self):
+        """Returns: run_id (str): actor run ID"""
+        return self._run_id
+
+    def get(self, **kwargs):
+        """Gets actor run details
+        https://www.apify.com/docs/api/v2#/reference/actors/run-object/get-run
+
+        Args:
+        kwargs:
+            waitForFinish (int): maximum number of seconds to wait for completion (default: 0)
+        Returns:
+            actor_run_details (JSON object): actor run details
+        """
+        return super().get(None, None, **kwargs)
+
+    def abort(self):
+        """Aborts actor run
+        https://www.apify.com/docs/api/v2#/reference/actors/abort-run/abort-run
+
+        Returns:
+            actor_run_details (JSON object): actor run details
+        """
+        url = self._base_url.replace(self.get_build_id(), "abort" + self.get_run_id())
         return super().post(url)
 
 
