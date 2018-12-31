@@ -2,20 +2,11 @@ import requests
 
 from .ApifyABC import ApifyABC
 
-# TODO MOVE COMMON FUNCTIONS BETWEEN OBJECTS TO APIFYABC AND JUST CHANGE DOCSTRINGS
 # TODO ONCE ALL IS FINISHED, REORDER FUNCTIONS ALPHABETICALLY
 
 
 class ActorABC(ApifyABC):
     def __init__(self, actor_id, session=requests.session(), config="apify_config.json"):
-        """Class for interacting with Apify actors
-        https://www.apify.com/docs/api/v2#/reference/actors
-
-        Args:
-            actor_id (str): actor ID or <username>~<actor name>
-            session (requests.Session object): used to send the HTTP requests (default: new session)
-            config (str, path-like): path to JSON file with user ID and token
-        """
         super().__init__(session, config)
         self._actor_id = actor_id
         self._base_url = 'https://api.apify.com/v2/acts/' + self.get_actor_id()
@@ -23,32 +14,6 @@ class ActorABC(ApifyABC):
     def get_actor_id(self):
         """Returns: actor_id (str): actor ID"""
         return self._actor_id
-
-    def get_details(self):
-        """Gets actor details
-        https://www.apify.com/docs/api/v2#/reference/actors/actor-object/get-actor
-
-        Returns:
-            actor_details (JSON object): actor details
-        """
-        return super().get()
-
-    def update(self, settings={}):
-        """Updates actor settings
-        https://www.apify.com/docs/api/v2#/reference/actors/actor-object/update-actor
-
-        Args:
-            settings (JSON object): settings to be updated
-
-        Returns:
-            settings (JSON object): new actor settings
-        """
-        return super().put(data=settings)
-
-    def delete(self):
-        """Deletes the actor
-        https://www.apify.com/docs/api/v2#/reference/actors/actor-object/delete-actor
-        """
 
 
 class Actor(ActorABC):
@@ -119,6 +84,21 @@ class Actor(ActorABC):
                 return super().post(url)
 
         return Build(self.get_actor_id(), build_id, self.get_session(), self._config)
+
+    def delete(self):
+        """Deletes the actor
+        https://www.apify.com/docs/api/v2#/reference/actors/actor-object/delete-actor
+        """
+        return super().delete()
+
+    def get(self):
+        """Gets actor details
+        https://www.apify.com/docs/api/v2#/reference/actors/actor-object/get-actor
+
+        Returns:
+            actor_details (JSON object): actor details
+        """
+        return super().get()
 
     def get_list_of_builds(self, **kwargs):
         """Gets list of actor builds
@@ -201,10 +181,17 @@ class Actor(ActorABC):
 
         return Version(self.get_actor_id(), version_number, self.get_session(), self._config)
 
+    def update(self, settings={}):
+        """Updates actor settings
+        https://www.apify.com/docs/api/v2#/reference/actors/actor-object/update-actor
 
+        Args:
+            settings (JSON object): settings to be updated
 
-# TODO ADD VERSION OBJECT
-# TODO ADD BUILD OBJECT
+        Returns:
+            settings (JSON object): new actor settings
+        """
+        return super().put(data=settings)
 # TODO ADD RUN OBJECT
 
 
