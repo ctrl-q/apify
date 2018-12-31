@@ -138,6 +138,24 @@ class Actor(ActorABC):
         url = self._base_url + "/versions"
         return super().post(url)
 
+    def run(self, input_={}, **kwargs):
+        """Runs actor asynchronously
+        https://www.apify.com/docs/api/v2#/reference/actors/run-collection/run-actor
+
+        Args:
+            input_ (JSON object): custom input fields (default: None)
+        kwargs:
+            timeout (int): timeout for the run (default: timeout from default run configuration)
+            memory (int): memory limit (in MB) (default: memory from default run configuration)
+            build (str): tag or number of actor build to run (default: build from default run configuration)
+            waitForFinish (int): maximum number of seconds to wait for completion (default: 0)
+
+        Returns:
+            run_details (JSON object): run details
+        """
+        url = self._base_url + "/runs"
+        return super().post(url, input_, **kwargs)
+
     def version(self, version_number):
         """Class for interacting with Apify actor versions
         https://www.apify.com/docs/api/v2#/reference/actors/version-object
