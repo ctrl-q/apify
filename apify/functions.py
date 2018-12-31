@@ -17,9 +17,7 @@ def create_crawler(session=requests.session(), config="apify_config.json", setti
     """
     user_id, token = common._get_auth(config)
     url = "https://api.apify.com/v1/" + user_id + "/crawlers"
-    r = session.post(url, params={"token": token}, json=settings)
-    r.raise_for_status()
-    return r.json()
+    return common._create(url, session, config, settings)
 
 
 def create_actor(session=requests.session(), config="apify_config.json", settings={}, **kwargs):
@@ -36,12 +34,8 @@ def create_actor(session=requests.session(), config="apify_config.json", setting
     Returns:
         actor (JSON object): actor
     """
-    user_id, token = common._get_auth(config)
     url = "https://api.apify.com/v2/acts"
-    kwargs.setdefault("token", token)
-    r = session.post(url, params=kwargs, json=settings)
-    r.raise_for_status()
-    return r.json()
+    return common._create(url, session, config, settings, **kwargs)
 
 
 def create_task(session=requests.session(), config="apify_config.json", settings={}):
@@ -56,11 +50,8 @@ def create_task(session=requests.session(), config="apify_config.json", settings
     Returns:
         task (JSON object): actor task
     """
-    user_id, token = common._get_auth(config)
     url = "https://api.apify.com/v2/actor-tasks"
-    r = session.post(url, params={"token": token}, json=settings)
-    r.raise_for_status()
-    return r.json()
+    return common._create(url, session, config, settings)
 
 
 def get_list_of_crawlers(session=requests.session(), config="apify_config.json", **kwargs):
