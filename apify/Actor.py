@@ -4,7 +4,6 @@ from .ApifyABC import ApifyABC
 
 # TODO ONCE ALL IS FINISHED, REORDER FUNCTIONS ALPHABETICALLY
 # TODO ONCE ALL IS FINISHED, CALL requests.Session() INSTEAD OF requests.session()
-# TODO SHOULD BUILD, VERSION AND RUN OBJECT BE NESTED IN FUNCTIONS?
 
 
 class ActorABC(ApifyABC):
@@ -120,6 +119,7 @@ class Actor(ActorABC):
         Returns:
             actor_run (Actor.Run): actor run
         """
+        return _Run(self.get_actor_id(), run_id, self.get_session(), self._config)
 
     def run(self, input_={}, **kwargs):
         """Runs actor asynchronously
@@ -156,7 +156,7 @@ class Actor(ActorABC):
         """
         url = self._base_url + "/run-sync"
         input_ = None if input_ == {} else input_
-        return self.post(url, input_, **kwargs)
+        return super().post(url, input_, **kwargs)
 
     def Version(self, version_number):
         """Class for interacting with Apify actor versions
