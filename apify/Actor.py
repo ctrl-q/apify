@@ -253,7 +253,7 @@ class _Build(ActorABC):
     def __init__(self, actor_id, build_id, session, config):
         super().__init__(actor_id, session, config)
         self._build_id = build_id
-        self._base_url += "builds/" + self.get_build_id()
+        self._base_url += "/builds/" + self.get_build_id()
 
     def get_build_id(self):
         """Returns: version_number (str): actor version number"""
@@ -281,7 +281,7 @@ class _Version(ActorABC):
     def __init__(self, actor_id, version_number, session, config):
         super().__init__(actor_id, session, config)
         self._version_number = version_number
-        self._base_url += "versions/" + self.get_version_number()
+        self._base_url += "/versions/" + self.get_version_number()
 
     def get_version_number(self):
         """Returns: version_number (str): actor version number"""
