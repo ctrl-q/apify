@@ -81,6 +81,45 @@ class Actor(ActorABC):
         kwargs["version"] = version
         return super().post(url, None, **kwargs)
 
+    def build(self, build_id):
+        """Class for interacting with Apify builds
+        https://www.apify.com/docs/api/v2#/reference/actors/build-object
+
+        Args:
+            build_id (str): actor build ID
+        Returns:
+            actor_build (Actor.Build): actor build
+        """
+        class Build(ActorABC):
+            def __init__(self, actor_id, build_id, session, config):
+                super().__init__(actor_id, session, config)
+                self._build_id = build_id
+                self._base_url += "builds/" + self.get_build_id()
+
+            def get_build_id(self):
+                """Returns: version_number (str): actor version number
+                """
+                return self._build_id
+
+            def get_details(self, **kwargs):
+                """Gets actor build details
+                https://www.apify.com/docs/api/v2#/reference/actors/build-object/get-build
+
+                Args:
+                kwargs:
+                    waitForFinish (int): maximum number of seconds to wait for completion (default: 0)
+
+                Returns:
+                    actor_build_details (JSON object): actor build details
+                """
+                return super().get_details
+
+            def abort(self):
+                url = self._base_url.replace(self.get_build_id(), "abort" + self.get_build_id())
+                return super().post(url)
+
+        return Build(self.get_actor_id(), build_id, self.get_session(), self._config)
+
     def get_list_of_builds(self, **kwargs):
         """Gets list of actor builds
         https://www.apify.com/docs/api/v2#/reference/actors/build-collection/get-list-of-builds
