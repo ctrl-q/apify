@@ -110,6 +110,30 @@ def get_list_of_actors(session=requests.session(), config="apify_config.json", *
     return r.json()
 
 
+def get_list_of_key_value_stores(session=requests.session(), config="apify_config.json", **kwargs):
+    """Gets list of key-value stores owned by the user
+    https://www.apify.com/docs/api/v2#/reference/key-value-stores/store-collection/get-list-of-key-value-stores
+
+    Args:
+        session (requests.Session object): used to send the HTTP requests (default: new session)
+        config (str, path-like): path to JSON file with user ID and token
+    kwargs:
+        offset (int): rank of first request to return (default: 0)
+        limit (int): maximum number of page results to return (default: 10000)
+        desc (int): If 1, executions are sorted from newest to oldest (default: None)
+        unnamed (bool): If True, unnamed key-value stores are returned with named ones (default: False)
+
+    Returns:
+        kv_list (JSON object): basic information about each key-value store
+    """
+    user_id, token = common._get_auth(config)
+    url = "https://api.apify.com/v2/key-value-stores"
+    kwargs.setdefault("token", token)
+    r = session.get(url, params=kwargs)
+    r.raise_for_status()
+    return r.json()
+
+
 def get_list_of_tasks(session=requests.session(), config="apify_config.json", **kwargs):
     """Gets list of tasks a user created or used
     https://www.apify.com/docs/api/v2#/reference/actor-tasks/tasks-collection/get-a-list-of-tasks
