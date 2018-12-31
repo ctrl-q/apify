@@ -62,7 +62,7 @@ class Actor(ActorABC):
             config (str, path-like): path to JSON file with user ID and token
         """
 
-    def build(self, version, **kwargs):
+    def build_actor(self, version, **kwargs):
         """Builds an actor
         https://www.apify.com/docs/api/v2#/reference/actors/build-collection/build-actor
 
