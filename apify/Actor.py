@@ -6,7 +6,7 @@ from .ApifyABC import ApifyABC
 # TODO ONCE ALL IS FINISHED, REORDER FUNCTIONS ALPHABETICALLY
 
 
-class Actor(ApifyABC):
+class ActorABC(ApifyABC):
     def __init__(self, actor_id, session=requests.session(), config="apify_config.json"):
         """Class for interacting with Apify actors
         https://www.apify.com/docs/api/v2#/reference/actors
@@ -48,6 +48,18 @@ class Actor(ApifyABC):
     def delete(self):
         """Deletes the actor
         https://www.apify.com/docs/api/v2#/reference/actors/actor-object/delete-actor
+        """
+
+
+class Actor(ActorABC):
+    def __init__(self, actor_id, session=requests.session(), config="apify_config.json"):
+        """Class for interacting with Apify actors
+        https://www.apify.com/docs/api/v2#/reference/actors
+
+        Args:
+            actor_id (str): actor ID or <username>~<actor name>
+            session (requests.Session object): used to send the HTTP requests (default: new session)
+            config (str, path-like): path to JSON file with user ID and token
         """
 
     def get_list_of_versions(self):
