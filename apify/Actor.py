@@ -266,6 +266,9 @@ class Task(ApifyABC):
             input_ (JSON object): custom input fields (default: None)
         kwargs:
             outputRecordKey (str): key to return from default key-value store (default: 'OUTPUT')
+
+        Returns:
+            out (JSON object): run output
         """
         url = self._base_url + "/run-sync"
         return super().get(url, input_, **kwargs)
