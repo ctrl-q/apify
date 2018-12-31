@@ -158,12 +158,9 @@ class Crawler(CrawlerABC):
         url = self._base_url + "/execs"
         return super().get(url, None, **kwargs)
 
-    def stop_last_execution(self, execution_id):
-        """Stops a specific crawler execution
-        https://www.apify.com/docs/api/v1#/reference/executions/start-execution/stop-execution
-
-        Args:
-            execution_id (str): ID of execution to be stopped
+    def stop_last_execution(self):
+        """Stops the last crawler execution
+        https://www.apify.com/docs/api/v1#/reference/executions/stop-execution
 
         Returns:
             execution_details (JSON object): execution details
