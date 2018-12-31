@@ -70,6 +70,29 @@ class Actor(ApifyABC):
         url = self._base_url + "/versions"
         return super().post(url)
 
+    def version(self, version_number):
+        """Class for interacting with Apify actor versions
+        https://www.apify.com/docs/api/v2#/reference/actors/version-object
+
+        Args:
+            version_number (str): actor version number
+        Returns:
+            actor_version (Actor.Version)
+        """
+        class Version(Actor):
+            def __init__(self, actor_id, version_number, session, config):
+                super().__init__(actor_id, session, config)
+                self._version_number = version_number
+                self._base_url += "versions/" + self.get_version_number()
+
+            def get_version_number(self):
+                """Returns: version_number (str): actor version number
+                """
+                return self._version_number
+        return Version(self.get_actor_id(), version_number, self.get_session(), self._config)
+
+
+
 # TODO ADD VERSION OBJECT
 # TODO ADD BUILD OBJECT
 # TODO ADD RUN OBJECT
