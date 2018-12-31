@@ -243,7 +243,20 @@ class Task(ApifyABC):
         url = self._base_url + "/runs"
         return super().get(url, None, **kwargs)
 
-    # TODO ADD RUN_TASK_ASYNCHRONOUSLY()
+    def run_asynchronously(self, input_={}, **kwargs):
+        """Runs task and returns run details
+        https://www.apify.com/docs/api/v2#/reference/actor-tasks/runs-collection/run-task-asynchronously
+
+        Args:
+            input_ (JSON object): custom input fields (default: None)
+        kwargs:
+            waitForFinish (int): maximum number of seconds to wait for completion (default: 0)
+
+        Returns:
+            actor_run_details (JSON object): actor run details
+        """
+        url = self._base_url + "/runs"
+        return super().post(url, None, **kwargs)
 
     def run_synchronously(self, input_={}, **kwargs):
         """Runs task and returns its output
