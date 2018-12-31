@@ -62,6 +62,22 @@ class Actor(ActorABC):
             config (str, path-like): path to JSON file with user ID and token
         """
 
+    def get_list_of_builds(self, **kwargs):
+        """Gets list of actor builds
+        https://www.apify.com/docs/api/v2#/reference/actors/build-collection/get-list-of-builds
+
+        Args:
+        kwargs:
+            offset (int): Rank of first build to return (default: 0)
+            limit (int): Maximum number of builds to return (default: 1000)
+            desc (int): If 1, builds are sorted from newest to oldest (default: None)
+
+        Returns:
+            build_list (JSON object): list of runs and their metadata
+        """
+        url = self._base_url + "/builds"
+        return super().get(url, None, **kwargs)
+
     def get_list_of_versions(self):
         """Gets list of actor versions
         https://www.apify.com/docs/api/v2#/reference/actors/version-collection/get-list-of-versions
