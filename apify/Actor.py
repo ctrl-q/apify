@@ -58,34 +58,7 @@ class Actor(ActorABC):
         Returns:
             actor_build (Actor.Build): actor build
         """
-        class Build(ActorABC):
-            def __init__(self, actor_id, build_id, session, config):
-                super().__init__(actor_id, session, config)
-                self._build_id = build_id
-                self._base_url += "builds/" + self.get_build_id()
-
-            def get_build_id(self):
-                """Returns: version_number (str): actor version number"""
-                return self._build_id
-
-            def get(self, **kwargs):
-                """Gets actor build details
-                https://www.apify.com/docs/api/v2#/reference/actors/build-object/get-build
-
-                Args:
-                kwargs:
-                    waitForFinish (int): maximum number of seconds to wait for completion (default: 0)
-
-                Returns:
-                    actor_build_details (JSON object): actor build details
-                """
-                return super().get(None, None, **kwargs)
-
-            def abort(self):
-                url = self._base_url.replace(self.get_build_id(), "abort" + self.get_build_id())
-                return super().post(url)
-
-        return Build(self.get_actor_id(), build_id, self.get_session(), self._config)
+        return _Build(self.get_actor_id(), build_id, self.get_session(), self._config)
 
     def delete(self):
         """Deletes the actor
@@ -312,3 +285,31 @@ class Task(ApifyABC):
         """
         url = self._base_url + "/run-sync"
         return super().get(url, input_, **kwargs)
+
+
+class _Build(ActorABC):
+    def __init__(self, actor_id, build_id, session, config):
+        super().__init__(actor_id, session, config)
+        self._build_id = build_id
+        self._base_url += "builds/" + self.get_build_id()
+
+    def get_build_id(self):
+        """Returns: version_number (str): actor version number"""
+        return self._build_id
+
+    def get(self, **kwargs):
+        """Gets actor build details
+        https://www.apify.com/docs/api/v2#/reference/actors/build-object/get-build
+
+        Args:
+        kwargs:
+            waitForFinish (int): maximum number of seconds to wait for completion (default: 0)
+
+        Returns:
+            actor_build_details (JSON object): actor build details
+        """
+        return super().get(None, None, **kwargs)
+
+    def abort(self):
+        url = self._base_url.replace(self.get_build_id(), "abort" + self.get_build_id())
+        return super().post(url)
