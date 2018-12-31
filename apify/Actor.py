@@ -3,6 +3,8 @@ import requests
 from .ApifyABC import ApifyABC
 
 # TODO ONCE ALL IS FINISHED, REORDER FUNCTIONS ALPHABETICALLY
+# TODO ONCE ALL IS FINISHED, CALL requests.Session() INSTEAD OF requests.session()
+# TODO SHOULD BUILD, VERSION AND RUN OBJECT BE NESTED IN FUNCTIONS?
 
 
 class ActorABC(ApifyABC):
@@ -63,11 +65,10 @@ class Actor(ActorABC):
                 self._base_url += "builds/" + self.get_build_id()
 
             def get_build_id(self):
-                """Returns: version_number (str): actor version number
-                """
+                """Returns: version_number (str): actor version number"""
                 return self._build_id
 
-            def get_details(self, **kwargs):
+            def get(self, **kwargs):
                 """Gets actor build details
                 https://www.apify.com/docs/api/v2#/reference/actors/build-object/get-build
 
@@ -146,7 +147,7 @@ class Actor(ActorABC):
         Returns:
             actor_version (Actor.Version)
         """
-        class Version(Actor):
+        class Version(ActorABC):
             def __init__(self, actor_id, version_number, session, config):
                 super().__init__(actor_id, session, config)
                 self._version_number = version_number
@@ -157,7 +158,7 @@ class Actor(ActorABC):
                 """
                 return self._version_number
 
-            def get_details(self):
+            def get(self):
                 """Gets actor version details
                 https://www.apify.com/docs/api/v2#/reference/actors/version-object/get-version
 
@@ -212,13 +213,13 @@ class Task(ApifyABC):
         """
         super().__init__(session, config)
         self._actor_task_id = actor_task_id
-        self._base_url = 'https://api.apify.com/v2/actor-tasks/' + self.get_actor_task_id()
+        self._base_url = 'https://api.apify.com/v2/actor-tasks/' + self.get_task_id()
 
-    def get_actor_task_id(self):
+    def get_task_id(self):
         """Returns: actor_task_id (str): actor task ID"""
         return self._actor_task_id
 
-    def get_details(self):
+    def get(self):
         """Gets task details
         https://www.apify.com/docs/api/v2#/reference/actor-tasks/task-object/get-task
 
@@ -251,9 +252,9 @@ class Task(ApifyABC):
 
         Args:
         kwargs:
-            offset (int): Rank of first execution to return (default: 0)
-            limit (int): Maximum number of executions to return (default: 1000)
-            desc (int): If 1, executions are sorted from newest to oldest (default: None)
+            offset (int): Rank of first run to return (default: 0)
+            limit (int): Maximum number of run to return (default: 1000)
+            desc (int): If 1, run are sorted from newest to oldest (default: None)
 
         Returns:
             run_list (JSON object): list of runs and their metadata
@@ -261,6 +262,7 @@ class Task(ApifyABC):
         url = self._base_url + "/runs"
         return super().get(url, None, **kwargs)
 
+    # TODO ADD RUN_TASK_ASYNCHRONOUSLY()
 
     def run_synchronously(self, input_={}, **kwargs):
         """Runs task and returns its output
