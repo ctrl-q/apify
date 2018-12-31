@@ -148,7 +148,7 @@ class Actor(ActorABC):
         input_ = None if input_ == {} else input_
         return self.post(url, input_, **kwargs)
 
-    def version(self, version_number):
+    def Version(self, version_number):
         """Class for interacting with Apify actor versions
         https://www.apify.com/docs/api/v2#/reference/actors/version-object
 
@@ -157,7 +157,7 @@ class Actor(ActorABC):
         Returns:
             actor_version (Actor.Version)
         """
-        class Version(ActorABC):
+        class _Version(ActorABC):
             def __init__(self, actor_id, version_number, session, config):
                 super().__init__(actor_id, session, config)
                 self._version_number = version_number
@@ -195,7 +195,7 @@ class Actor(ActorABC):
                 """
                 return super().delete()
 
-        return Version(self.get_actor_id(), version_number, self.get_session(), self._config)
+        return _Version(self.get_actor_id(), version_number, self.get_session(), self._config)
 
     def update(self, settings={}):
         """Updates actor settings
@@ -313,3 +313,5 @@ class _Build(ActorABC):
     def abort(self):
         url = self._base_url.replace(self.get_build_id(), "abort" + self.get_build_id())
         return super().post(url)
+
+class 
