@@ -113,6 +113,7 @@ class Crawler(CrawlerABC):
         """Deletes the crawler
         https://www.apify.com/docs/api/v1#/reference/crawlers/crawler-settings/delete-crawler
         """
+        return super().delete()
 
     def get_settings(self, **kwargs):
         """Gets full details and settings of a specific crawler
