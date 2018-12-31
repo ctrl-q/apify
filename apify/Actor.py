@@ -130,7 +130,7 @@ class Actor(ActorABC):
         return super().post(url, input_, **kwargs)
 
     def run_synchronously(self, input_={}, **kwargs):
-        """Runs actor sand returns its output
+        """Runs actor and returns its output
         https://www.apify.com/docs/api/v2#/reference/actors/run-actor-synchronously
 
         Args:
