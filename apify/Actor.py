@@ -30,7 +30,7 @@ class Actor(ActorABC):
         """
         super().__init__(actor_id, session, config)
 
-    def build_actor(self, version, **kwargs):
+    def build(self, version, **kwargs):
         """Builds an actor
         https://www.apify.com/docs/api/v2#/reference/actors/build-collection/build-actor
 
@@ -49,7 +49,7 @@ class Actor(ActorABC):
         kwargs["version"] = version
         return super().post(url, None, **kwargs)
 
-    def build(self, build_id):
+    def Build(self, build_id):
         """Class for interacting with Apify builds
         https://www.apify.com/docs/api/v2#/reference/actors/build-object
 
