@@ -62,6 +62,25 @@ class Actor(ActorABC):
             config (str, path-like): path to JSON file with user ID and token
         """
 
+    def build(self, version, **kwargs):
+        """Builds an actor
+        https://www.apify.com/docs/api/v2#/reference/actors/build-collection/build-actor
+
+        Args:
+            version (str): version number to be built
+        kwargs:
+            useCache (bool): whether use a cache to speed up the build process (default: False)
+            betaPackages (bool): whether actor is built with beta versions of Apify NPM packages
+            tag (str): tag to be applied on success (default: taken from actor version's buildTag property)
+            waitForFinish (int): maximum number of seconds to wait for completion (default: 0)
+
+        Returns:
+            build_list (JSON object): list of runs and their metadata
+        """
+        url = self._base_url + "/builds"
+        kwargs["version"] = version
+        return super().post(url, None, **kwargs)
+
     def get_list_of_builds(self, **kwargs):
         """Gets list of actor builds
         https://www.apify.com/docs/api/v2#/reference/actors/build-collection/get-list-of-builds
