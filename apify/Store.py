@@ -3,7 +3,18 @@ import requests
 from .ApifyABC import ApifyABC
 
 
-class Store(ApifyABC):
+class StoreABC(ApifyABC):
+    def __init__(self, store_id, session=requests.session(), config="apify_config.json"):
+        super().__init__(session, config)
+        self._store_id = store_id
+        self._base_url = 'https://api.apify.com/v2/key-value-stores/' + self.get_store_id()
+
+    def get_store_id(self):
+        """Returns: store_id (str): store ID"""
+        return self._store_id
+
+
+class Store(StoreABC):
     def __init__(self, store_id, session=requests.session(), config="apify_config.json"):
         """Class for interacting with Apify key-value stores
         https://www.apify.com/docs/api/v2#/reference/key-value-stores
@@ -13,13 +24,7 @@ class Store(ApifyABC):
             session (requests.Session object): used to send the HTTP requests (default: new session)
             config (str, path-like): path to JSON file with user ID and token
         """
-        super().__init__(session, config)
-        self._store_id = store_id
-        self._base_url = 'https://api.apify.com/v2/key-value-stores/' + self.get_store_id()
-
-    def get_store_id(self):
-        """Returns: store_id (str): store ID"""
-        return self._store_id
+        super().__init__(store_id, session, config)
 
     def get(self):
         """Gets store details
