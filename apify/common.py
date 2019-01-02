@@ -47,6 +47,9 @@ def _create(url, session, config, settings, **kwargs):
     """
     user_id, token = _get_auth(config)
     kwargs.setdefault("token", token)
-    r = session.post(url, params=kwargs, json=settings)
+    if settings in ({}, None):
+        r = session.post(url, params=kwargs)
+    else:
+        r = session.post(url, params=kwargs, json=settings)
     r.raise_for_status()
     return r.json()
