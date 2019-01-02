@@ -55,3 +55,81 @@ class Store(StoreABC):
         https://www.apify.com/docs/api/v2#/reference/key-value-stores/store-object/delete-store
         """
         return super().delete()
+
+    def Record(self, record_key):
+        """Class for interacting with Apify key-value store records
+        https://www.apify.com/docs/api/v2#/reference/key-value-stores/record
+
+        Args:
+            record_key (str): key of the record
+        Returns:
+            record (Store.Record): store record
+        """
+        return _Record(self.get_store_id(), record_key, self.get_session(), self._config)
+
+
+class _Record(StoreABC):
+    def __init__(self, store_id, record_key, session, config):
+        super().__init__(store_id, session, config)
+        self._record_key = record_key
+        self._base_url += "/records/" + self.get_record_key()
+
+    def get_direct_upload_url(self, mime_type="application/json", gzip=False):
+        """Gets unique url to upload record
+
+        Args:
+            mime_type (str) : MIME type of value (default: application/json)
+            gzip (bool): whether value is gzipped (default: False)
+
+        Returns:
+            upload_url (JSON object): JSON object containing upload url
+        """
+        url = self._base_url + "/direct-upload-url"
+        if mime_type.lower() in ("application/json", "application/javascript") and gzip is False:
+            return super().get(url)
+
+        headers = {"Content-Type": mime_type}
+        if gzip:
+            headers["Content-Encoding"] = "gzip"
+        r = self.get_session().get(url, params={"token": self.get_token()}, headers=headers)
+        r.raise_for_status()
+        return r.json()
+
+    def get_record_key(self):
+        """Returns: record_key (str): store record key"""
+        return self._record_key
+
+    def get(self, **kwargs):
+        """Gets value stored under the key
+        https://www.apify.com/docs/api/v2#/reference/key-value-stores/record/get-record
+
+        Args:
+        kwargs:
+            disableRedirect (bool): whether to get the record from apify.com instead of amazonaws.com (default: False)
+        """
+        return super().get(None, None, **kwargs)
+
+    def put(self, value, mime_type="application/json", gzip=False):
+        """Stores a value for the key
+        https://www.apify.com/docs/api/v2#/reference/key-value-stores/record/put-record
+
+        Args:
+            value (any object): value to store
+            mime_type (str) : MIME type of value (default: application/json)
+            gzip (bool): whether value is gzipped (default: False)
+        """
+        if mime_type.lower() in ("application/json", "application/javascript") and gzip is False:
+            return super().put(None, value)
+
+        headers = {"Content-Type": mime_type}
+        if gzip:
+            headers["Content-Encoding"] = "gzip"
+        r = self.get_session().put(self._base_url, params={"token": self.get_token()}, json={self.get_record_key(): value}, headers=headers)
+        r.raise_for_status()
+        return r.json()
+
+    def delete(self):
+        """Deletes record
+        https://www.apify.com/docs/api/v2#/reference/key-value-stores/record/delete-record
+        """
+        return super().delete()
