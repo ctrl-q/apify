@@ -21,7 +21,7 @@ def _get_list(url, session, config, **kwargs):
         url (str): url to get
         session (requests.Session object): used to send the HTTP requests (default: new session)
         config (str, path-like): path to JSON file with user ID and token
-        kwargs
+        kwargs used by calling function
 
     Returns:
         list_of_items (JSON object): basic information about each object
