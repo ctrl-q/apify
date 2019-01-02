@@ -38,6 +38,22 @@ def create_actor(session=requests.session(), config="apify_config.json", setting
     return common._create(url, session, config, settings, **kwargs)
 
 
+def create_key_value_store(name, session=requests.session(), config="apify_config.json"):
+    """Creates key-value store
+    https://www.apify.com/docs/api/v2#/reference/key-value-stores/store-collection/create-key-value-store
+
+    Args:
+        name (str): unique name for the key-value store
+        session (requests.Session object): used to send the HTTP requests (default: new session)
+        config (str, path-like): path to JSON file with user ID and token
+
+    Returns:
+        store (JSON object): key-value store
+    """
+    url = "https://api.apify.com/v2/key-value-stores"
+    return common._create(url, session, config, {}, name=name)
+
+
 def create_task(session=requests.session(), config="apify_config.json", settings={}):
     """Creates task with specified settings
     https://www.apify.com/docs/api/v2#/reference/actor-tasks/tasks-collection/create-a-task
