@@ -4,7 +4,7 @@ from .ApifyABC import ApifyABC
 
 
 class StoreABC(ApifyABC):
-    def __init__(self, store_id, session=requests.session(), config="apify_config.json"):
+    def __init__(self, store_id, session, config):
         super().__init__(session, config)
         self._store_id = store_id
         self._base_url = 'https://api.apify.com/v2/key-value-stores/' + self.get_store_id()

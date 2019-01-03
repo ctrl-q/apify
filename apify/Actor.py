@@ -7,7 +7,7 @@ from .ApifyABC import ApifyABC
 
 
 class ActorABC(ApifyABC):
-    def __init__(self, actor_id, session=requests.session(), config="apify_config.json"):
+    def __init__(self, actor_id, session, config):
         super().__init__(session, config)
         self._actor_id = actor_id
         self._base_url = 'https://api.apify.com/v2/acts/' + self.get_actor_id()

@@ -4,7 +4,7 @@ from .ApifyABC import ApifyABC
 
 
 class QueueABC(ApifyABC):
-    def __init__(self, queue_id, session=requests.session(), config="apify_config.json"):
+    def __init__(self, queue_id, session, config):
         super().__init__(session, config)
         self._queue_id = queue_id
         self._base_url = 'https://api.apify.com/v2/request-queues/' + self.get_queue_id()
