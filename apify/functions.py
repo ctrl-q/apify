@@ -71,6 +71,22 @@ def create_key_value_store(name, session=requests.session(), config="apify_confi
     return common._create(url, session, config, {}, name=name)
 
 
+def create_request_queue(name, session=requests.session(), config="apify_config.json"):
+    """Creates key-value store
+    https://www.apify.com/docs/api/v2#/reference/request-queues/queue-collection/create-request-queue
+
+    Args:
+        name (str): unique name for the request queue
+        session (requests.Session object): used to send the HTTP requests (default: new session)
+        config (str, path-like): path to JSON file with user ID and token
+
+    Returns:
+        store (JSON object): key-value store
+    """
+    url = "https://api.apify.com/v2/request-queues"
+    return common._create(url, session, config, {}, name=name)
+
+
 def create_task(session=requests.session(), config="apify_config.json", settings={}):
     """Creates task with specified settings
     https://www.apify.com/docs/api/v2#/reference/actor-tasks/tasks-collection/create-a-task
@@ -161,9 +177,29 @@ def get_list_of_key_value_stores(session=requests.session(), config="apify_confi
         unnamed (bool): If True, unnamed key-value stores are returned with named ones (default: False)
 
     Returns:
-        kv_list (JSON object): basic information about each key-value store
+        store_list (JSON object): basic information about each key-value store
     """
     url = "https://api.apify.com/v2/key-value-stores"
+    return common._get_list(url, session, config, **kwargs)
+
+
+def get_list_of_request_queues(session=requests.session(), config="apify_config.json", **kwargs):
+    """Gets list of requests queues owned by user
+    https://www.apify.com/docs/api/v2#/reference/request-queues/queue-collection/get-list-of-request-queues
+
+    Args:
+        session (requests.Session object): used to send the HTTP requests (default: new session)
+        config (str, path-like): path to JSON file with user ID and token
+    kwargs:
+        offset (int): rank of first request to return (default: 0)
+        limit (int): maximum number of page results to return (default: 10000)
+        desc (int): If 1, executions are sorted from newest to oldest (default: None)
+        unnamed (bool): If True, unnamed key-value stores are returned with named ones (default: False)
+
+    Returns:
+        queue_list (JSON object): basic information about each key-value store
+    """
+    url = "https://api.apify.com/v2/request-queues"
     return common._get_list(url, session, config, **kwargs)
 
 
