@@ -26,6 +26,21 @@ class Queue(QueueABC):
         """
         super().__init__(queue_id, session, config)
 
+    def get(self):
+        """Gets queue details
+        https://www.apify.com/docs/api/v2#/reference/request-queues/queue/get-request-queue
+
+        Returns:
+            queue_details (JSON object): queue details
+        """
+        return super()._get()
+
+    def delete(self):
+        """Deletes queue
+        https://www.apify.com/docs/api/v2#/reference/request-queues/queue/delete-request-queue
+        """
+        return super()._delete()
+
     def add_request(self, unique_key, url, method, **kwargs):
         """Adds request to the queue
         https://www.apify.com/docs/api/v2#/reference/request-queues/request-collection/add-request
@@ -45,14 +60,14 @@ class Queue(QueueABC):
         data = {"uniqueKey": unique_key, "url": url, "method": method}
         return super()._post(url_, data, **kwargs)
 
-    def get(self):
-        """Gets queue details
-        https://www.apify.com/docs/api/v2#/reference/request-queues/queue/get-request-queue
+    def Request(self, request_id):
+        """Class for interacting with Apify queue requests
+        https://www.apify.com/docs/api/v2#/reference/request-queues/request/
 
-        Returns:
-            queue_details (JSON object): queue details
+        Args:
+            request_id (str): request ID
         """
-        return super()._get()
+        return _Request(self.get_queue_id(), request_id, self.get_session(), self._config)
 
     def get_head(self, **kwargs):
         """Gets first request(s) from the queue
@@ -67,21 +82,6 @@ class Queue(QueueABC):
         """
         url = self._base_url + "/head"
         return super()._get(url, None, **kwargs)
-
-    def delete(self):
-        """Deletes queue
-        https://www.apify.com/docs/api/v2#/reference/request-queues/queue/delete-request-queue
-        """
-        return super()._delete()
-
-    def Request(self, request_id):
-        """Class for interacting with Apify queue requests
-        https://www.apify.com/docs/api/v2#/reference/request-queues/request/
-
-        Args:
-            request_id (str): request ID
-        """
-        return _Request(self.get_queue_id(), request_id, self.get_session(), self._config)
 
 
 class _Request(QueueABC):

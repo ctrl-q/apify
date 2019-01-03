@@ -35,6 +35,12 @@ class Store(StoreABC):
         """
         return super()._get()
 
+    def delete(self):
+        """Deletes the actor
+        https://www.apify.com/docs/api/v2#/reference/key-value-stores/store-object/delete-store
+        """
+        return super()._delete()
+
     def get_list_of_keys(self, **kwargs):
         """Gets list of store keys and info about values
         https://www.apify.com/docs/api/v2#/reference/key-value-stores/key-collection/get-list-of-keys
@@ -49,12 +55,6 @@ class Store(StoreABC):
         """
         url = self._base_url + "/keys"
         return super()._get(url, None, **kwargs)
-
-    def delete(self):
-        """Deletes the actor
-        https://www.apify.com/docs/api/v2#/reference/key-value-stores/store-object/delete-store
-        """
-        return super()._delete()
 
     def Record(self, record_key):
         """Class for interacting with Apify key-value store records
@@ -73,27 +73,6 @@ class _Record(StoreABC):
         super().__init__(store_id, session, config)
         self._record_key = record_key
         self._base_url += "/records/" + self.get_record_key()
-
-    def get_direct_upload_url(self, mime_type="application/json", gzip=False):
-        """Gets unique url to upload record
-
-        Args:
-            mime_type (str) : MIME type of value (default: application/json)
-            gzip (bool): whether value is gzipped (default: False)
-
-        Returns:
-            upload_url (JSON object): JSON object containing upload url
-        """
-        url = self._base_url + "/direct-upload-url"
-        if mime_type.lower() in ("application/json", "application/javascript") and gzip is False:
-            return super()._get(url)
-
-        headers = {"Content-Type": mime_type}
-        if gzip:
-            headers["Content-Encoding"] = "gzip"
-        r = self.get_session().get(url, params={"token": self.get_token()}, headers=headers)
-        r.raise_for_status()
-        return r.json()
 
     def get_record_key(self):
         """Returns: record_key (str): store record key"""
@@ -133,3 +112,24 @@ class _Record(StoreABC):
         https://www.apify.com/docs/api/v2#/reference/key-value-stores/record/delete-record
         """
         return super()._delete()
+
+    def get_direct_upload_url(self, mime_type="application/json", gzip=False):
+        """Gets unique url to upload record
+
+        Args:
+            mime_type (str) : MIME type of value (default: application/json)
+            gzip (bool): whether value is gzipped (default: False)
+
+        Returns:
+            upload_url (JSON object): JSON object containing upload url
+        """
+        url = self._base_url + "/direct-upload-url"
+        if mime_type.lower() in ("application/json", "application/javascript") and gzip is False:
+            return super()._get(url)
+
+        headers = {"Content-Type": mime_type}
+        if gzip:
+            headers["Content-Encoding"] = "gzip"
+        r = self.get_session().get(url, params={"token": self.get_token()}, headers=headers)
+        r.raise_for_status()
+        return r.json()

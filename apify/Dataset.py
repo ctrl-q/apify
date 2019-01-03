@@ -19,12 +19,6 @@ class Dataset(ApifyABC):
         self._dataset_id = dataset_id
         self._base_url = "https://api.apify.com/v2/datasets/" + self.get_dataset_id()
 
-    def delete(self):
-        """Deletes the dataset
-        https://www.apify.com/docs/api/v2#/reference/datasets/dataset/delete-dataset
-        """
-        return super()._delete()
-
     def get(self):
         """Gets actor details
         https://www.apify.com/docs/api/v2#/reference/datasets/dataset/get-dataset
@@ -33,6 +27,12 @@ class Dataset(ApifyABC):
             dataset_details (JSON object): dataset details
         """
         return super()._get()
+
+    def delete(self):
+        """Deletes the dataset
+        https://www.apify.com/docs/api/v2#/reference/datasets/dataset/delete-dataset
+        """
+        return super()._delete()
 
     def get_dataset_id(self):
         """Returns: dataset_id (str): dataset ID"""

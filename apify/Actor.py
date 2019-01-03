@@ -28,6 +28,80 @@ class Actor(ActorABC):
         """
         super().__init__(actor_id, session, config)
 
+    def get(self):
+        """Gets actor details
+        https://www.apify.com/docs/api/v2#/reference/actors/actor-object/get-actor
+
+        Returns:
+            actor_details (JSON object): actor details
+        """
+        return super()._get()
+
+    def update(self, settings={}):
+        """Updates actor settings
+        https://www.apify.com/docs/api/v2#/reference/actors/actor-object/update-actor
+
+        Args:
+            settings (JSON object): settings to be updated
+
+        Returns:
+            settings (JSON object): new actor settings
+        """
+        return super()._put(data=settings)
+
+    def delete(self):
+        """Deletes the actor
+        https://www.apify.com/docs/api/v2#/reference/actors/actor-object/delete-actor
+        """
+        return super()._delete()
+
+    def get_list_of_versions(self):
+        """Gets list of actor versions
+        https://www.apify.com/docs/api/v2#/reference/actors/version-collection/get-list-of-versions
+
+        Returns:
+            version_list (JSON object): basic information about each version
+        """
+        url = self._base_url + "/versions"
+        return super()._get(url)
+
+    def create_version(self):
+        """Creates actor version
+        https://www.apify.com/docs/api/v2#/reference/actors/version-collection/create-version
+
+        Returns:
+            actor_version (JSON object): basic information about the version
+        """
+        url = self._base_url + "/versions"
+        return super()._post(url)
+
+    def Version(self, version_number):
+        """Class for interacting with Apify actor versions
+        https://www.apify.com/docs/api/v2#/reference/actors/version-object
+
+        Args:
+            version_number (str): actor version number
+        Returns:
+            actor_version (Actor.Version)
+        """
+        return _Version(self.get_actor_id(), version_number, self.get_session(), self._config)
+
+    def get_list_of_builds(self, **kwargs):
+        """Gets list of actor builds
+        https://www.apify.com/docs/api/v2#/reference/actors/build-collection/get-list-of-builds
+
+        Args:
+        kwargs:
+            offset (int): Rank of first build to return (default: 0)
+            limit (int): Maximum number of builds to return (default: 1000)
+            desc (int): If 1, builds are sorted from newest to oldest (default: None)
+
+        Returns:
+            build_list (JSON object): list of runs and their metadata
+        """
+        url = self._base_url + "/builds"
+        return super()._get(url, None, **kwargs)
+
     def build(self, version, **kwargs):
         """Builds an actor
         https://www.apify.com/docs/api/v2#/reference/actors/build-collection/build-actor
@@ -57,68 +131,6 @@ class Actor(ActorABC):
             actor_build (Actor.Build): actor build
         """
         return _Build(self.get_actor_id(), build_id, self.get_session(), self._config)
-
-    def delete(self):
-        """Deletes the actor
-        https://www.apify.com/docs/api/v2#/reference/actors/actor-object/delete-actor
-        """
-        return super()._delete()
-
-    def get(self):
-        """Gets actor details
-        https://www.apify.com/docs/api/v2#/reference/actors/actor-object/get-actor
-
-        Returns:
-            actor_details (JSON object): actor details
-        """
-        return super()._get()
-
-    def get_list_of_builds(self, **kwargs):
-        """Gets list of actor builds
-        https://www.apify.com/docs/api/v2#/reference/actors/build-collection/get-list-of-builds
-
-        Args:
-        kwargs:
-            offset (int): Rank of first build to return (default: 0)
-            limit (int): Maximum number of builds to return (default: 1000)
-            desc (int): If 1, builds are sorted from newest to oldest (default: None)
-
-        Returns:
-            build_list (JSON object): list of runs and their metadata
-        """
-        url = self._base_url + "/builds"
-        return super()._get(url, None, **kwargs)
-
-    def get_list_of_versions(self):
-        """Gets list of actor versions
-        https://www.apify.com/docs/api/v2#/reference/actors/version-collection/get-list-of-versions
-
-        Returns:
-            version_list (JSON object): basic information about each version
-        """
-        url = self._base_url + "/versions"
-        return super()._get(url)
-
-    def create_version(self):
-        """Creates actor version
-        https://www.apify.com/docs/api/v2#/reference/actors/version-collection/create-version
-
-        Returns:
-            actor_version (JSON object): basic information about the version
-        """
-        url = self._base_url + "/versions"
-        return super()._post(url)
-
-    def Run(self, run_id):
-        """Class for interacting with Apify actor runs
-        https://www.apify.com/docs/api/v2#/reference/actors/run-object
-
-        Args:
-            run_number (str): actor version number
-        Returns:
-            actor_run (Actor.Run): actor run
-        """
-        return _Run(self.get_actor_id(), run_id, self.get_session(), self._config)
 
     def run(self, input_={}, **kwargs):
         """Runs actor asynchronously
@@ -157,28 +169,16 @@ class Actor(ActorABC):
         input_ = None if input_ == {} else input_
         return super()._post(url, input_, **kwargs)
 
-    def Version(self, version_number):
-        """Class for interacting with Apify actor versions
-        https://www.apify.com/docs/api/v2#/reference/actors/version-object
+    def Run(self, run_id):
+        """Class for interacting with Apify actor runs
+        https://www.apify.com/docs/api/v2#/reference/actors/run-object
 
         Args:
-            version_number (str): actor version number
+            run_number (str): actor version number
         Returns:
-            actor_version (Actor.Version)
+            actor_run (Actor.Run): actor run
         """
-        return _Version(self.get_actor_id(), version_number, self.get_session(), self._config)
-
-    def update(self, settings={}):
-        """Updates actor settings
-        https://www.apify.com/docs/api/v2#/reference/actors/actor-object/update-actor
-
-        Args:
-            settings (JSON object): settings to be updated
-
-        Returns:
-            settings (JSON object): new actor settings
-        """
-        return super()._put(data=settings)
+        return _Run(self.get_actor_id(), run_id, self.get_session(), self._config)
 
 
 class Task(ApifyABC):
