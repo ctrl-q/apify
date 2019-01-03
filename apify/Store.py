@@ -33,7 +33,7 @@ class Store(StoreABC):
         Returns:
             store_details (JSON object): store details
         """
-        return super().get()
+        return super()._get()
 
     def get_list_of_keys(self, **kwargs):
         """Gets list of store keys and info about values
@@ -48,13 +48,13 @@ class Store(StoreABC):
             key_list (JSON object): list of keys and info about values
         """
         url = self._base_url + "/keys"
-        return super().get(url, None, **kwargs)
+        return super()._get(url, None, **kwargs)
 
     def delete(self):
         """Deletes the actor
         https://www.apify.com/docs/api/v2#/reference/key-value-stores/store-object/delete-store
         """
-        return super().delete()
+        return super()._delete()
 
     def Record(self, record_key):
         """Class for interacting with Apify key-value store records
@@ -86,7 +86,7 @@ class _Record(StoreABC):
         """
         url = self._base_url + "/direct-upload-url"
         if mime_type.lower() in ("application/json", "application/javascript") and gzip is False:
-            return super().get(url)
+            return super()._get(url)
 
         headers = {"Content-Type": mime_type}
         if gzip:
@@ -107,7 +107,7 @@ class _Record(StoreABC):
         kwargs:
             disableRedirect (bool): whether to get the record from apify.com instead of amazonaws.com (default: False)
         """
-        return super().get(None, None, **kwargs)
+        return super()._get(None, None, **kwargs)
 
     def put(self, value, mime_type="application/json", gzip=False):
         """Stores a value for the key
@@ -119,7 +119,7 @@ class _Record(StoreABC):
             gzip (bool): whether value is gzipped (default: False)
         """
         if mime_type.lower() in ("application/json", "application/javascript") and gzip is False:
-            return super().put(None, value)
+            return super()._put(None, value)
 
         headers = {"Content-Type": mime_type}
         if gzip:
@@ -132,4 +132,4 @@ class _Record(StoreABC):
         """Deletes record
         https://www.apify.com/docs/api/v2#/reference/key-value-stores/record/delete-record
         """
-        return super().delete()
+        return super()._delete()

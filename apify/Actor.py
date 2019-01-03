@@ -45,7 +45,7 @@ class Actor(ActorABC):
         """
         url = self._base_url + "/builds"
         kwargs["version"] = version
-        return super().post(url, None, **kwargs)
+        return super()._post(url, None, **kwargs)
 
     def Build(self, build_id):
         """Class for interacting with Apify builds
@@ -62,7 +62,7 @@ class Actor(ActorABC):
         """Deletes the actor
         https://www.apify.com/docs/api/v2#/reference/actors/actor-object/delete-actor
         """
-        return super().delete()
+        return super()._delete()
 
     def get(self):
         """Gets actor details
@@ -71,7 +71,7 @@ class Actor(ActorABC):
         Returns:
             actor_details (JSON object): actor details
         """
-        return super().get()
+        return super()._get()
 
     def get_list_of_builds(self, **kwargs):
         """Gets list of actor builds
@@ -87,7 +87,7 @@ class Actor(ActorABC):
             build_list (JSON object): list of runs and their metadata
         """
         url = self._base_url + "/builds"
-        return super().get(url, None, **kwargs)
+        return super()._get(url, None, **kwargs)
 
     def get_list_of_versions(self):
         """Gets list of actor versions
@@ -97,7 +97,7 @@ class Actor(ActorABC):
             version_list (JSON object): basic information about each version
         """
         url = self._base_url + "/versions"
-        return super().get(url)
+        return super()._get(url)
 
     def create_version(self):
         """Creates actor version
@@ -107,7 +107,7 @@ class Actor(ActorABC):
             actor_version (JSON object): basic information about the version
         """
         url = self._base_url + "/versions"
-        return super().post(url)
+        return super()._post(url)
 
     def Run(self, run_id):
         """Class for interacting with Apify actor runs
@@ -136,7 +136,7 @@ class Actor(ActorABC):
             run_details (JSON object): run details
         """
         url = self._base_url + "/runs"
-        return super().post(url, input_, **kwargs)
+        return super()._post(url, input_, **kwargs)
 
     def run_synchronously(self, input_={}, **kwargs):
         """Runs actor and returns its output
@@ -155,7 +155,7 @@ class Actor(ActorABC):
         """
         url = self._base_url + "/run-sync"
         input_ = None if input_ == {} else input_
-        return super().post(url, input_, **kwargs)
+        return super()._post(url, input_, **kwargs)
 
     def Version(self, version_number):
         """Class for interacting with Apify actor versions
@@ -178,7 +178,7 @@ class Actor(ActorABC):
         Returns:
             settings (JSON object): new actor settings
         """
-        return super().put(data=settings)
+        return super()._put(data=settings)
 
 
 class Task(ApifyABC):
@@ -206,7 +206,7 @@ class Task(ApifyABC):
         Returns:
             task_details (JSON object): actor details
         """
-        return super().get()
+        return super()._get()
 
     def update(self, settings={}):
         """Updates task settings
@@ -218,13 +218,13 @@ class Task(ApifyABC):
         Returns:
             settings (JSON object): new task settings
         """
-        return super().put(data=settings)
+        return super()._put(data=settings)
 
     def delete(self):
         """Deletes the task
         https://www.apify.com/docs/api/v2#/reference/actor-tasks/task-object/delete-task
         """
-        return super().delete()
+        return super()._delete()
 
     def get_list_of_runs(self, **kwargs):
         """Gets the task's list of runs
@@ -240,7 +240,7 @@ class Task(ApifyABC):
             run_list (JSON object): list of runs and their metadata
         """
         url = self._base_url + "/runs"
-        return super().get(url, None, **kwargs)
+        return super()._get(url, None, **kwargs)
 
     def run_asynchronously(self, input_={}, **kwargs):
         """Runs task and returns run details
@@ -255,7 +255,7 @@ class Task(ApifyABC):
             actor_run_details (JSON object): actor run details
         """
         url = self._base_url + "/runs"
-        return super().post(url, None, **kwargs)
+        return super()._post(url, None, **kwargs)
 
     def run_synchronously(self, input_={}, **kwargs):
         """Runs task and returns its output
@@ -270,7 +270,7 @@ class Task(ApifyABC):
             out (JSON object): run output
         """
         url = self._base_url + "/run-sync"
-        return super().get(url, input_, **kwargs)
+        return super()._get(url, input_, **kwargs)
 
 
 class _Build(ActorABC):
@@ -294,11 +294,11 @@ class _Build(ActorABC):
         Returns:
             actor_build_details (JSON object): actor build details
         """
-        return super().get(None, None, **kwargs)
+        return super()._get(None, None, **kwargs)
 
     def abort(self):
         url = self._base_url.replace(self.get_build_id(), "abort" + self.get_build_id())
-        return super().post(url)
+        return super()._post(url)
 
 
 class _Run(ActorABC):
@@ -321,7 +321,7 @@ class _Run(ActorABC):
         Returns:
             actor_run_details (JSON object): actor run details
         """
-        return super().get(None, None, **kwargs)
+        return super()._get(None, None, **kwargs)
 
     def abort(self):
         """Aborts actor run
@@ -331,7 +331,7 @@ class _Run(ActorABC):
             actor_run_details (JSON object): actor run details
         """
         url = self._base_url.replace(self.get_build_id(), "abort" + self.get_run_id())
-        return super().post(url)
+        return super()._post(url)
 
 
 class _Version(ActorABC):
@@ -351,7 +351,7 @@ class _Version(ActorABC):
         Returns:
             actor_version_details (JSON object): actor version details
         """
-        return super().get()
+        return super()._get()
 
     def update(self, settings={}):
         """Updates actor version settings
@@ -363,10 +363,10 @@ class _Version(ActorABC):
         Returns:
             settings (JSON object): new actor version settings
         """
-        return super().put(data=settings)
+        return super()._put(data=settings)
 
     def delete(self):
         """Deletes the actor version
         https://www.apify.com/docs/api/v2#/reference/actors/version-object/delete-version
         """
-        return super().delete()
+        return super()._delete()

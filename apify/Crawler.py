@@ -113,7 +113,7 @@ class Crawler(CrawlerABC):
         """Deletes the crawler
         https://www.apify.com/docs/api/v1#/reference/crawlers/crawler-settings/delete-crawler
         """
-        return super().delete()
+        return super()._delete()
 
     def get_settings(self, **kwargs):
         """Gets full details and settings of a specific crawler
@@ -127,7 +127,7 @@ class Crawler(CrawlerABC):
         Returns:
             settings (JSON object): crawler settings
         """
-        return super().get()
+        return super()._get()
 
     def update_settings(self, settings={}):
         """Updates a specific crawler's settings
@@ -139,7 +139,7 @@ class Crawler(CrawlerABC):
         Returns:
             settings (JSON object): new crawler settings
         """
-        return super().put(data=settings)
+        return super()._put(data=settings)
 
     def get_list_of_executions(self, **kwargs):
         """Gets the crawler's list of executions
@@ -156,7 +156,7 @@ class Crawler(CrawlerABC):
             execution_list (JSON object): list of executions and their metadata
         """
         url = self._base_url + "/execs"
-        return super().get(url, None, **kwargs)
+        return super()._get(url, None, **kwargs)
 
     def stop_last_execution(self):
         """Stops the last crawler execution
@@ -255,7 +255,7 @@ class Execution(CrawlerABC):
             execution_details (JSON object): execution details
         """
         url = self._base_url + "/stop"
-        return super().post(url)
+        return super()._post(url)
 
     def get_details(self):
         """Gets execution details
@@ -264,7 +264,7 @@ class Execution(CrawlerABC):
         Returns:
             execution_details (JSON object): execution details
         """
-        return super().get()
+        return super()._get()
 
     def get_execution_id(self):
         """Returns: execution_id (str): crawler ID"""

@@ -43,7 +43,7 @@ class Queue(QueueABC):
 
         url_ = self._base_url + "/requests"
         data = {"uniqueKey": unique_key, "url": url, "method": method}
-        return super().post(url_, data, **kwargs)
+        return super()._post(url_, data, **kwargs)
 
     def get(self):
         """Gets queue details
@@ -52,7 +52,7 @@ class Queue(QueueABC):
         Returns:
             queue_details (JSON object): queue details
         """
-        return super().get()
+        return super()._get()
 
     def get_head(self, **kwargs):
         """Gets first request(s) from the queue
@@ -66,13 +66,13 @@ class Queue(QueueABC):
             queue_head (JSON object): information about first request(s)
         """
         url = self._base_url + "/head"
-        return super().get(url, None, **kwargs)
+        return super()._get(url, None, **kwargs)
 
     def delete(self):
         """Deletes queue
         https://www.apify.com/docs/api/v2#/reference/request-queues/queue/delete-request-queue
         """
-        return super().delete()
+        return super()._delete()
 
     def Request(self, request_id):
         """Class for interacting with Apify queue requests
@@ -101,7 +101,7 @@ class _Request(QueueABC):
         Returns:
             request_details (JSON object): queue request details
         """
-        return super().get()
+        return super()._get()
 
     def update(self, id, unique_key, url, method, **kwargs):
         """Updates queue request
@@ -120,10 +120,10 @@ class _Request(QueueABC):
             raise ValueError("accepted methods: {0}".format(accepted_methods))
 
         data = {"id": id, "uniqueKey": unique_key, "url": url, "method": method}
-        return super().put(None, data, **kwargs)
+        return super()._put(None, data, **kwargs)
 
     def delete(self):
         """Deletes queue request
         https://www.apify.com/docs/api/v2#/reference/request-queues/request/delete-request
         """
-        return super().delete()
+        return super()._delete()

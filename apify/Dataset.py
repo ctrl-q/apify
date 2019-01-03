@@ -23,7 +23,7 @@ class Dataset(ApifyABC):
         """Deletes the dataset
         https://www.apify.com/docs/api/v2#/reference/datasets/dataset/delete-dataset
         """
-        return super().delete()
+        return super()._delete()
 
     def get(self):
         """Gets actor details
@@ -32,7 +32,7 @@ class Dataset(ApifyABC):
         Returns:
             dataset_details (JSON object): dataset details
         """
-        return super().get()
+        return super()._get()
 
     def get_dataset_id(self):
         """Returns: dataset_id (str): dataset ID"""
@@ -86,4 +86,4 @@ class Dataset(ApifyABC):
             data (JSON object or array of JSON object): items to store
         """
         url = self._base_url + "/items"
-        return super().put(url, data)
+        return super()._put(url, data)

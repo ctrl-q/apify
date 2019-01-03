@@ -22,11 +22,11 @@ class ApifyABC:
         """
         self._session = session
 
-    def delete(self):
+    def _delete(self):
         r = self.get_session().delete(self._base_url, params={"token": self.get_token()})
         r.raise_for_status()
 
-    def get(self, url=None, data=None, **kwargs):
+    def _get(self, url=None, data=None, **kwargs):
         url = self._base_url if url is None else url
         kwargs.setdefault("token", self.get_token())
         if data is None:
@@ -36,14 +36,14 @@ class ApifyABC:
         r.raise_for_status()
         return r.json()
 
-    def put(self, url=None, data=None, **kwargs):
+    def _put(self, url=None, data=None, **kwargs):
         kwargs.setdefault("token", self.get_token())
         url = self._base_url if url is None else url
         r = self.get_session().put(url, params=kwargs, json=data)
         r.raise_for_status()
         return r.json()
 
-    def post(self, url=None, data=None, **kwargs):
+    def _post(self, url=None, data=None, **kwargs):
         url = self._base_url if url is None else url
         kwargs.setdefault("token", self.get_token())
         if data is None:
