@@ -6,7 +6,7 @@ from .ApifyABC import ApifyABC
 
 
 class Dataset(ApifyABC):
-    def __init__(self, dataset_id, session=requests.session(), config="apify_config.json"):
+    def __init__(self, dataset_id, session=requests.Session(), config="apify_config.json"):
         """Class for interacting with Apify datasets
         https://www.apify.com/docs/api/v2#/reference/datasets/dataset/
 

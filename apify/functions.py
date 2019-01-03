@@ -3,7 +3,7 @@ import requests
 from . import common
 
 
-def create_crawler(session=requests.session(), config="apify_config.json", settings={}):
+def create_crawler(session=requests.Session(), config="apify_config.json", settings={}):
     """Creates crawler with specified settings
     https://www.apify.com/docs/api/v1#/reference/results/create-crawler
 
@@ -20,7 +20,7 @@ def create_crawler(session=requests.session(), config="apify_config.json", setti
     return common._create(url, session, config, settings)
 
 
-def create_actor(session=requests.session(), config="apify_config.json", settings={}, **kwargs):
+def create_actor(session=requests.Session(), config="apify_config.json", settings={}, **kwargs):
     """Creates actor with specified settings
     https://www.apify.com/docs/api/v2#/reference/actors/actor-collection/create-actor
 
@@ -38,7 +38,7 @@ def create_actor(session=requests.session(), config="apify_config.json", setting
     return common._create(url, session, config, settings, **kwargs)
 
 
-def create_dataset(name, session=requests.session(), config="apify_config.json", **kwargs):
+def create_dataset(name, session=requests.Session(), config="apify_config.json", **kwargs):
     """Creates dataset
     https://www.apify.com/docs/api/v2#/reference/datasets/dataset-collection/create-dataset
 
@@ -55,7 +55,7 @@ def create_dataset(name, session=requests.session(), config="apify_config.json",
     return common._create(url, session, config, {}, name=name)
 
 
-def create_key_value_store(name, session=requests.session(), config="apify_config.json"):
+def create_key_value_store(name, session=requests.Session(), config="apify_config.json"):
     """Creates key-value store
     https://www.apify.com/docs/api/v2#/reference/key-value-stores/store-collection/create-key-value-store
 
@@ -71,7 +71,7 @@ def create_key_value_store(name, session=requests.session(), config="apify_confi
     return common._create(url, session, config, {}, name=name)
 
 
-def create_request_queue(name, session=requests.session(), config="apify_config.json"):
+def create_request_queue(name, session=requests.Session(), config="apify_config.json"):
     """Creates key-value store
     https://www.apify.com/docs/api/v2#/reference/request-queues/queue-collection/create-request-queue
 
@@ -87,7 +87,7 @@ def create_request_queue(name, session=requests.session(), config="apify_config.
     return common._create(url, session, config, {}, name=name)
 
 
-def create_task(session=requests.session(), config="apify_config.json", settings={}):
+def create_task(session=requests.Session(), config="apify_config.json", settings={}):
     """Creates task with specified settings
     https://www.apify.com/docs/api/v2#/reference/actor-tasks/tasks-collection/create-a-task
 
@@ -103,7 +103,7 @@ def create_task(session=requests.session(), config="apify_config.json", settings
     return common._create(url, session, config, settings)
 
 
-def get_list_of_crawlers(session=requests.session(), config="apify_config.json", **kwargs):
+def get_list_of_crawlers(session=requests.Session(), config="apify_config.json", **kwargs):
     """Gets a list of crawlers belonging to a specific user
     https://www.apify.com/docs/api/v1#/reference/crawlers/list-of-crawlers/get-list-of-crawlers
 
@@ -123,7 +123,7 @@ def get_list_of_crawlers(session=requests.session(), config="apify_config.json",
     return common._get_list(url, session, config, **kwargs)
 
 
-def get_list_of_actors(session=requests.session(), config="apify_config.json", **kwargs):
+def get_list_of_actors(session=requests.Session(), config="apify_config.json", **kwargs):
     """Gets list of actors a user created or used
     https://www.apify.com/docs/api/v2#/reference/actors/actor-collection/get-list-of-actors
 
@@ -143,7 +143,7 @@ def get_list_of_actors(session=requests.session(), config="apify_config.json", *
     return common._get_list(url, session, config, **kwargs)
 
 
-def get_list_of_datasets(session=requests.session(), config="apify_config.json", **kwargs):
+def get_list_of_datasets(session=requests.Session(), config="apify_config.json", **kwargs):
     """Gets list of datasets owned by the user
     https://www.apify.com/docs/api/v2#/reference/datasets/dataset-collection/get-list-of-datasets
 
@@ -163,7 +163,7 @@ def get_list_of_datasets(session=requests.session(), config="apify_config.json",
     return common._get_list(url, session, config, **kwargs)
 
 
-def get_list_of_key_value_stores(session=requests.session(), config="apify_config.json", **kwargs):
+def get_list_of_key_value_stores(session=requests.Session(), config="apify_config.json", **kwargs):
     """Gets list of key-value stores owned by the user
     https://www.apify.com/docs/api/v2#/reference/key-value-stores/store-collection/get-list-of-key-value-stores
 
@@ -183,7 +183,7 @@ def get_list_of_key_value_stores(session=requests.session(), config="apify_confi
     return common._get_list(url, session, config, **kwargs)
 
 
-def get_list_of_request_queues(session=requests.session(), config="apify_config.json", **kwargs):
+def get_list_of_request_queues(session=requests.Session(), config="apify_config.json", **kwargs):
     """Gets list of requests queues owned by user
     https://www.apify.com/docs/api/v2#/reference/request-queues/queue-collection/get-list-of-request-queues
 
@@ -203,7 +203,7 @@ def get_list_of_request_queues(session=requests.session(), config="apify_config.
     return common._get_list(url, session, config, **kwargs)
 
 
-def get_list_of_tasks(session=requests.session(), config="apify_config.json", **kwargs):
+def get_list_of_tasks(session=requests.Session(), config="apify_config.json", **kwargs):
     """Gets list of tasks a user created or used
     https://www.apify.com/docs/api/v2#/reference/actor-tasks/tasks-collection/get-a-list-of-tasks
 
@@ -222,7 +222,7 @@ def get_list_of_tasks(session=requests.session(), config="apify_config.json", **
     return common._get_list(url, session, config, **kwargs)
 
 
-def get_public_user_data(user_id, session=requests.session()):
+def get_public_user_data(user_id, session=requests.Session()):
     """Gets public information about user
     https://www.apify.com/docs/api/v2#/reference/users/public-data/get-public-user-data
 
@@ -238,7 +238,7 @@ def get_public_user_data(user_id, session=requests.session()):
     return r.json()
 
 
-def get_private_user_data(session=requests.session(), config="apify_config.json"):
+def get_private_user_data(session=requests.Session(), config="apify_config.json"):
     """Gets public and private information about user
     https://www.apify.com/docs/api/v2#/reference/users/private-data/get-private-user-data
 

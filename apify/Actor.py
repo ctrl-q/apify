@@ -2,8 +2,7 @@ import requests
 
 from .ApifyABC import ApifyABC
 
-# TODO ONCE ALL IS FINISHED, REORDER FUNCTIONS ALPHABETICALLY
-# TODO ONCE ALL IS FINISHED, CALL requests.Session() INSTEAD OF requests.session()
+# TODO ONCE ALL IS FINISHED, REORDER FUNCTIONS LIKE DOCS
 
 
 class ActorABC(ApifyABC):
@@ -18,7 +17,7 @@ class ActorABC(ApifyABC):
 
 
 class Actor(ActorABC):
-    def __init__(self, actor_id, session=requests.session(), config="apify_config.json"):
+    def __init__(self, actor_id, session=requests.Session(), config="apify_config.json"):
         """Class for interacting with Apify actors
         https://www.apify.com/docs/api/v2#/reference/actors
 
@@ -183,7 +182,7 @@ class Actor(ActorABC):
 
 
 class Task(ApifyABC):
-    def __init__(self, actor_task_id, session=requests.session(), config="apify_config.json"):
+    def __init__(self, actor_task_id, session=requests.Session(), config="apify_config.json"):
         """Class for interacting with Apify actor tasks
         https://www.apify.com/docs/api/v2#/reference/actor-tasks
 

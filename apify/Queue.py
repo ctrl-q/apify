@@ -15,7 +15,7 @@ class QueueABC(ApifyABC):
 
 
 class Queue(QueueABC):
-    def __init__(self, queue_id, session=requests.session(), config="apify_config.json"):
+    def __init__(self, queue_id, session=requests.Session(), config="apify_config.json"):
         """Class for interacting with Apify request queues
         https://www.apify.com/docs/api/v2#/reference/request-queues/queue/
 

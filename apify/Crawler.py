@@ -15,7 +15,7 @@ class CrawlerABC(ApifyABC):
 
 
 class Crawler(CrawlerABC):
-    def __init__(self, crawler_id, session=requests.session(), config="apify_config.json"):
+    def __init__(self, crawler_id, session=requests.Session(), config="apify_config.json"):
         """Class for interacting with Apify crawlers
         https://www.apify.com/docs/api/v1#/reference/crawlers
 
@@ -175,7 +175,7 @@ class Crawler(CrawlerABC):
 
 
 class Execution(CrawlerABC):
-    def __init__(self, execution_id, session=requests.session(), config="apify_config.json"):
+    def __init__(self, execution_id, session=requests.Session(), config="apify_config.json"):
         """Class for interacting with Apify executions
         https://www.apify.com/docs/api/v1#/reference/executions
 
@@ -210,14 +210,14 @@ class Execution(CrawlerABC):
             skipHeaderRow (int): if 1, header row is skipped in CSV format (default: 0)
 
         Returns:
-            out (JSON object or str): path to download file if attachment == 0 else execution results
+            out (JSON object or str): path to download file if attachment == 1 else execution results
 
         """
         url = self._base_url + "/results"
         kwargs.setdefault("token", self.get_token())
         format_ = kwargs.get("format", "json").lower()
         accepted_formats = ("json", "jsonl", "csv", "html",
-                            "xlsx", "xml", "csv", None)
+                            "rss", "xlsx", "xml", None)
         if format_ not in accepted_formats:
             raise ValueError("Accepted formats: {0}".format(accepted_formats))
 

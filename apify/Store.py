@@ -15,7 +15,7 @@ class StoreABC(ApifyABC):
 
 
 class Store(StoreABC):
-    def __init__(self, store_id, session=requests.session(), config="apify_config.json"):
+    def __init__(self, store_id, session=requests.Session(), config="apify_config.json"):
         """Class for interacting with Apify key-value stores
         https://www.apify.com/docs/api/v2#/reference/key-value-stores
 
