@@ -38,6 +38,23 @@ def create_actor(session=requests.session(), config="apify_config.json", setting
     return common._create(url, session, config, settings, **kwargs)
 
 
+def create_dataset(name, session=requests.session(), config="apify_config.json", **kwargs):
+    """Creates dataset
+    https://www.apify.com/docs/api/v2#/reference/datasets/dataset-collection/create-dataset
+
+    Args:
+        name (str): unique name for the dataset
+        session (requests.Session object): used to send the HTTP requests (default: new session)
+        config (str, path-like): path to JSON file with user ID and token
+        settings (JSON object): crawler settings
+
+    Returns:
+        actor (JSON object): actor
+    """
+    url = "https://api.apify.com/v2/datasets"
+    return common._create(url, session, config, {}, name=name)
+
+
 def create_key_value_store(name, session=requests.session(), config="apify_config.json"):
     """Creates key-value store
     https://www.apify.com/docs/api/v2#/reference/key-value-stores/store-collection/create-key-value-store
@@ -107,6 +124,26 @@ def get_list_of_actors(session=requests.session(), config="apify_config.json", *
         actor_list (JSON object): basic information about each crawler
     """
     url = "https://api.apify.com/v2/acts"
+    return common._get_list(url, session, config, **kwargs)
+
+
+def get_list_of_datasets(session=requests.session(), config="apify_config.json", **kwargs):
+    """Gets list of datasets owned by the user
+    https://www.apify.com/docs/api/v2#/reference/datasets/dataset-collection/get-list-of-datasets
+
+    Args:
+        session (requests.Session object): used to send the HTTP requests (default: new session)
+        config (str, path-like): path to JSON file with user ID and token
+    kwargs:
+        offset (int): rank of first request to return (default: 0)
+        limit (int): maximum number of page results to return (default: 10000)
+        desc (int): If 1, executions are sorted from newest to oldest (default: None)
+        unnamed (bool): If True, unnamed key-value stores are returned with named ones (default: False)
+
+    Returns:
+        dataset_list (JSON object): basic information about each dataset
+    """
+    url = "https://api.apify.com/v2/datasets"
     return common._get_list(url, session, config, **kwargs)
 
 
