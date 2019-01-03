@@ -220,3 +220,34 @@ def get_list_of_tasks(session=requests.session(), config="apify_config.json", **
     """
     url = "https://api.apify.com/v2/actor-tasks"
     return common._get_list(url, session, config, **kwargs)
+
+
+def get_public_user_data(user_id, session=requests.session()):
+    """Gets public information about user
+    https://www.apify.com/docs/api/v2#/reference/users/public-data/get-public-user-data
+
+    Args:
+        user_id (str): user ID or username
+
+    Returns:
+        public_user_data (JSON object): public information about user
+    """
+    url = "https://api.apify.com/v2/users/" + user_id
+    r = session.get(url)
+    r.raise_for_status()
+    return r.json()
+
+
+def get_private_user_data(session=requests.session(), config="apify_config.json"):
+    """Gets public and private information about user
+    https://www.apify.com/docs/api/v2#/reference/users/private-data/get-private-user-data
+
+    Args:
+        session (requests.Session object): used to send the HTTP requests (default: new session)
+        config (str, path-like): path to JSON file with user ID and token
+
+    Returns:
+        user_data (JSON object): public and private information about user
+    """
+    url = "https://api.apify.com/v2/users/me"
+    return common._get_list(url, session, config)
