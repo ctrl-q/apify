@@ -36,9 +36,10 @@ class ApifyABC:
         r.raise_for_status()
         return r.json()
 
-    def put(self, url=None, data=None):
+    def put(self, url=None, data=None, **kwargs):
+        kwargs.setdefault("token", self.get_token())
         url = self._base_url if url is None else url
-        r = self.get_session().put(url, params={"token": self.get_token()}, json=data)
+        r = self.get_session().put(url, params=kwargs, json=data)
         r.raise_for_status()
         return r.json()
 
