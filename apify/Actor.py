@@ -132,6 +132,22 @@ class Actor(ActorABC):
         """
         return _Build(self.get_actor_id(), build_id, self.get_session(), self._config)
 
+    def get_list_of_runs(self, **kwargs):
+        """Gets the actor's list of runs
+        https://www.apify.com/docs/api/v2#/reference/actors/run-collection/get-list-of-runs
+
+        Args:
+        kwargs:
+            offset (int): Rank of first run to return (default: 0)
+            limit (int): Maximum number of runs to return (default: 1000)
+            desc (int): If 1, runs are sorted from newest to oldest (default: None)
+
+        Returns:
+            run_list (JSON object): list of runs and their metadata
+        """
+        url = self._base_url + "/runs"
+        return super()._get(url, None, **kwargs)
+
     def run(self, input_={}, **kwargs):
         """Runs actor asynchronously
         https://www.apify.com/docs/api/v2#/reference/actors/run-collection/run-actor
