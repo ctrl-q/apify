@@ -45,7 +45,7 @@ class Crawler(CrawlerABC):
         Returns:
             settings (JSON object): crawler settings
         """
-        return super()._get()  # TODO ADD **KWARGS
+        return super()._get(None, None, **kwargs)
 
     def update_settings(self, settings={}):
         """Updates crawler settings
