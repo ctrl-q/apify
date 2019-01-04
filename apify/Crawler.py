@@ -29,6 +29,42 @@ class Crawler(CrawlerABC):
         self._base_url = 'https://api.apify.com/v1/' + \
             self.get_user_id() + '/crawlers/' + self.get_crawler_id()
 
+    def get_crawler_id(self):
+        """Returns: crawler_id (str): crawler ID"""
+        return self._crawler_id
+
+    def get_settings(self, **kwargs):
+        """Gets full crawler details and settings
+        https://www.apify.com/docs/api/v1#/reference/crawlers/crawler-settings/get-crawler-settings
+
+        Args:
+        kwargs:
+            noSecrets (int): If 1, response will not contain sensitive data like auth tokens (default: 0)
+            executionId (str): execution ID for which to return the settings (default: current settings)
+
+        Returns:
+            settings (JSON object): crawler settings
+        """
+        return super()._get()  # TODO ADD **KWARGS
+
+    def update_settings(self, settings={}):
+        """Updates crawler settings
+        https://www.apify.com/docs/api/v1#/reference/crawlers/crawler-settings/update-crawler-settings
+
+        Args:
+            settings (JSON object): settings to be updated
+
+        Returns:
+            settings (JSON object): new crawler settings
+        """
+        return super()._put(data=settings)
+
+    def delete(self):
+        """Deletes the crawler
+        https://www.apify.com/docs/api/v1#/reference/crawlers/crawler-settings/delete-crawler
+        """
+        return super()._delete()
+
     def start(self, settings={}, **kwargs):
         """Executes crawler
         https://www.apify.com/docs/api/v1#/reference/executions/start-execution/start-execution
@@ -61,6 +97,23 @@ class Crawler(CrawlerABC):
                 status = self.get_session().get(details_url).json()["status"]
         r.raise_for_status()
         return r.json()
+
+    def get_list_of_executions(self, **kwargs):
+        """Gets the crawler's list of executions
+        https://www.apify.com/docs/api/v1#/reference/executions/list-of-executions/get-list-of-executions
+
+        Args:
+        kwargs:
+            status (str): Filter for the execution status (default: no filter)
+            offset (int): Rank of first execution to return (default: 0)
+            limit (int): Maximum number of executions to return (default: 1000)
+            desc (int): If 1, executions are sorted from newest to oldest (default: None)
+
+        Returns:
+            execution_list (JSON object): list of executions and their metadata
+        """
+        url = self._base_url + "/execs"
+        return super()._get(url, None, **kwargs)
 
     def get_last_execution(self, **kwargs):
         """Gets information about the crawler's last execution
@@ -109,55 +162,6 @@ class Crawler(CrawlerABC):
 
         return execution.get_results(combine=combine, **kwargs)
 
-    def delete(self):
-        """Deletes the crawler
-        https://www.apify.com/docs/api/v1#/reference/crawlers/crawler-settings/delete-crawler
-        """
-        return super()._delete()
-
-    def get_settings(self, **kwargs):
-        """Gets full details and settings of a specific crawler
-        https://www.apify.com/docs/api/v1#/reference/crawlers/crawler-settings/get-crawler-settings
-
-        Args:
-        kwargs:
-            noSecrets (int): If 1, response will not contain sensitive data like auth tokens (default: 0)
-            executionId (str): execution ID for which to return the settings (default: current settings)
-
-        Returns:
-            settings (JSON object): crawler settings
-        """
-        return super()._get()
-
-    def update_settings(self, settings={}):
-        """Updates a specific crawler's settings
-        https://www.apify.com/docs/api/v1#/reference/crawlers/crawler-settings/update-crawler-settings
-
-        Args:
-            settings (JSON object): settings to be updated
-
-        Returns:
-            settings (JSON object): new crawler settings
-        """
-        return super()._put(data=settings)
-
-    def get_list_of_executions(self, **kwargs):
-        """Gets the crawler's list of executions
-        https://www.apify.com/docs/api/v1#/reference/executions/list-of-executions/get-list-of-executions
-
-        Args:
-        kwargs:
-            status (str): Filter for the execution status (default: no filter)
-            offset (int): Rank of first execution to return (default: 0)
-            limit (int): Maximum number of executions to return (default: 1000)
-            desc (int): If 1, executions are sorted from newest to oldest (default: None)
-
-        Returns:
-            execution_list (JSON object): list of executions and their metadata
-        """
-        url = self._base_url + "/execs"
-        return super()._get(url, None, **kwargs)
-
     def stop_last_execution(self):
         """Stops the last crawler execution
         https://www.apify.com/docs/api/v1#/reference/executions/stop-execution
@@ -168,10 +172,6 @@ class Crawler(CrawlerABC):
         execution_id = self.get_last_execution()["_id"]
         execution = Execution(execution_id, session=self.get_session(), config=self._config)
         return execution.stop()
-
-    def get_crawler_id(self):
-        """Returns: crawler_id (str): crawler ID"""
-        return self._crawler_id
 
 
 class Execution(CrawlerABC):
@@ -187,6 +187,29 @@ class Execution(CrawlerABC):
         super().__init__(session, config)
         self._execution_id = execution_id
         self._base_url = "https://api.apify.com/v1/execs/" + self.get_execution_id()
+
+    def get_execution_id(self):
+        """Returns: execution_id (str): crawler ID"""
+        return self._execution_id
+
+    def stop(self):
+        """Stops the execution
+        https://www.apify.com/docs/api/v1#/reference/executions/stop-execution/
+
+        Returns:
+            execution_details (JSON object): execution details
+        """
+        url = self._base_url + "/stop"
+        return super()._post(url)
+
+    def get_details(self):
+        """Gets execution details
+        https://www.apify.com/docs/api/v1#/reference/executions/execution-details/get-execution-details
+
+        Returns:
+            execution_details (JSON object): execution details
+        """
+        return super()._get()
 
     def get_results(self, combine=False, **kwargs):
         """ Gets execution results
@@ -246,26 +269,3 @@ class Execution(CrawlerABC):
         else:
             result = r.text
         return result
-
-    def stop(self):
-        """Stops the execution
-        https://www.apify.com/docs/api/v1#/reference/executions/stop-execution/stop-execution
-
-        Returns:
-            execution_details (JSON object): execution details
-        """
-        url = self._base_url + "/stop"
-        return super()._post(url)
-
-    def get_details(self):
-        """Gets execution details
-        https://www.apify.com/docs/api/v1#/reference/executions/execution-details/get-execution-details
-
-        Returns:
-            execution_details (JSON object): execution details
-        """
-        return super()._get()
-
-    def get_execution_id(self):
-        """Returns: execution_id (str): crawler ID"""
-        return self._execution_id
