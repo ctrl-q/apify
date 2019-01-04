@@ -84,7 +84,7 @@ def create_request_queue(name, session=requests.Session(), config="apify_config.
         store (JSON object): key-value store
     """
     url = "https://api.apify.com/v2/request-queues"
-    return common._create(url, session, config, {}, name=name)
+    return common._create(url, session, config, None, name=name)
 
 
 def create_task(session=requests.Session(), config="apify_config.json", settings={}):
@@ -94,7 +94,7 @@ def create_task(session=requests.Session(), config="apify_config.json", settings
     Args:
         session (requests.Session object): used to send the HTTP requests (default: new session)
         config (str, path-like): path to JSON file with user ID and token
-        settings (JSON object): crawler settings
+        settings (JSON object): task settings
 
     Returns:
         task (JSON object): actor task
@@ -132,9 +132,9 @@ def get_list_of_actors(session=requests.Session(), config="apify_config.json", *
         config (str, path-like): path to JSON file with user ID and token
     kwargs:
         my (bool): if True, only actors owned by the user are returned (default: False)
-        offset (int): rank of first request to return (default: 0)
-        limit (int): maximum number of page results to return (default: 10000)
-        desc (int): If 1, executions are sorted from newest to oldest (default: None)
+        offset (int): rank of first actor to return (default: 0)
+        limit (int): maximum number of actors to return (default: 10000)
+        desc (int): If 1, actors are sorted from newest to oldest (default: None)
 
     Returns:
         actor_list (JSON object): basic information about each crawler
@@ -171,9 +171,9 @@ def get_list_of_key_value_stores(session=requests.Session(), config="apify_confi
         session (requests.Session object): used to send the HTTP requests (default: new session)
         config (str, path-like): path to JSON file with user ID and token
     kwargs:
-        offset (int): rank of first request to return (default: 0)
-        limit (int): maximum number of page results to return (default: 10000)
-        desc (int): If 1, executions are sorted from newest to oldest (default: None)
+        offset (int): rank of first store to return (default: 0)
+        limit (int): maximum number of stores to return (default: 10000)
+        desc (int): If 1, stores are sorted from newest to oldest (default: None)
         unnamed (bool): If True, unnamed key-value stores are returned with named ones (default: False)
 
     Returns:
@@ -211,9 +211,9 @@ def get_list_of_tasks(session=requests.Session(), config="apify_config.json", **
         session (requests.Session object): used to send the HTTP requests (default: new session)
         config (str, path-like): path to JSON file with user ID and token
     kwargs:
-        offset (int): rank of first request to return (default: 0)
-        limit (int): maximum number of page results to return (default: 10000)
-        desc (int): If 1, executions are sorted from newest to oldest (default: None)
+        offset (int): rank of first task to return (default: 0)
+        limit (int): maximum number of records to return (default: 10000)
+        desc (int): If 1, tasks are sorted from newest to oldest (default: None)
 
     Returns:
         actor_list (JSON object): basic information about each crawler

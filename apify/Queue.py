@@ -88,7 +88,7 @@ class _Request(QueueABC):
     def __init__(self, queue_id, request_id, session, config):
         super().__init__(queue_id, session, config)
         self._request_id = request_id
-        self._base_url += "requests/" + self.get_request_id()
+        self._base_url += "/requests/" + self.get_request_id()
 
     def get_request_id(self):
         """Returns: request_id (str): queue request ID"""

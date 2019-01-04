@@ -46,17 +46,17 @@ class Dataset(ApifyABC):
             combine (bool): if each page function result is a JSON object, combine them into one (if format == "json" and attachment == 0) (default: False)
         kwargs:
             format (str): format of the results, either "json", "jsonl", "csv", "html", "xlsx", "xml" or "rss". (default: "json")
-            offset (int): rank of item request to return (default: 0)
+            offset (int): rank of first item to return (default: 0)
             limit (int): maximum number of items to return (default: 10000)
             fields (str): comma-separated list of fields to return (default: all)
             omit (str): comma-separated list of fields to omit (default: none)
-            unwind (str): name of a file to unwind. If it's an array, its items are split into separate records
+            unwind (str): name of a field to unwind. If it's an array, its items are split into separate records
             desc (int): if 1, results are returned from most-recently to least-recently saved in database
             attachment (int): if 1, results will be saved to working directory and not returned (default: 0)
             delimiter (str): delimiter character for CSV format (default: ",")
             bom (int): if 1, results for all formats will be prefixed by UTF-8 BOM. If 0, BOM will be skipped (default: None)
-            xmlRoot (str): default root element name of XML output (default: "results")
-            xmlRow (str): default element name wrapping each page function results (default: "page" if simplified == 1 else "result")
+            xmlRoot (str): default root element name of XML output (default: "items")
+            xmlRow (str): default element name wrapping each page function results (default: "item")
             skipHeaderRow (int): if 1, header row is skipped in CSV format (default: 0)
 
         Returns:
@@ -83,7 +83,7 @@ class Dataset(ApifyABC):
         https://www.apify.com/docs/api/v2#/reference/datasets/item-collection/put-items
 
         Args:
-            data (JSON object or array of JSON object): items to store
+            data (JSON object or array of JSON objects): items to store
         """
         url = self._base_url + "/items"
         return super()._put(url, data)

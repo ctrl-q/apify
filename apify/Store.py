@@ -115,6 +115,7 @@ class _Record(StoreABC):
 
     def get_direct_upload_url(self, mime_type="application/json", gzip=False):
         """Gets unique url to upload record
+        https://www.apify.com/docs/api/v2#/reference/key-value-stores/direct-upload-url/get-direct-upload-url
 
         Args:
             mime_type (str) : MIME type of value (default: application/json)

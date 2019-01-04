@@ -2,8 +2,6 @@ import requests
 
 from .ApifyABC import ApifyABC
 
-# TODO ONCE ALL IS FINISHED, REORDER FUNCTIONS LIKE DOCS
-
 
 class ActorABC(ApifyABC):
     def __init__(self, actor_id, session, config):
@@ -166,7 +164,7 @@ class Actor(ActorABC):
         url = self._base_url + "/runs"
         return super()._post(url, input_, **kwargs)
 
-    def run_synchronously(self, input_={}, **kwargs):
+    def run_synchronously(self, input_=None, **kwargs):
         """Runs actor and returns its output
         https://www.apify.com/docs/api/v2#/reference/actors/run-actor-synchronously
 
@@ -182,7 +180,6 @@ class Actor(ActorABC):
             out (JSON object): run output
         """
         url = self._base_url + "/run-sync"
-        input_ = None if input_ == {} else input_
         return super()._post(url, input_, **kwargs)
 
     def Run(self, run_id):
@@ -198,22 +195,22 @@ class Actor(ActorABC):
 
 
 class Task(ApifyABC):
-    def __init__(self, actor_task_id, session=requests.Session(), config="apify_config.json"):
+    def __init__(self, task_id, session=requests.Session(), config="apify_config.json"):
         """Class for interacting with Apify actor tasks
         https://www.apify.com/docs/api/v2#/reference/actor-tasks
 
         Args:
-            actor_id (str): actor ID or <username>~<actor name>
+            task_id (str): actor ID or <username>~<actor name>
             session (requests.Session object): used to send the HTTP requests (default: new session)
             config (str, path-like): path to JSON file with user ID and token
         """
         super().__init__(session, config)
-        self._actor_task_id = actor_task_id
+        self._task_id = task_id
         self._base_url = 'https://api.apify.com/v2/actor-tasks/' + self.get_task_id()
 
     def get_task_id(self):
-        """Returns: actor_task_id (str): actor task ID"""
-        return self._actor_task_id
+        """Returns: task_id (str): actor task ID"""
+        return self._task_id
 
     def get(self):
         """Gets task details
@@ -249,8 +246,8 @@ class Task(ApifyABC):
         Args:
         kwargs:
             offset (int): Rank of first run to return (default: 0)
-            limit (int): Maximum number of run to return (default: 1000)
-            desc (int): If 1, run are sorted from newest to oldest (default: None)
+            limit (int): Maximum number of runs to return (default: 1000)
+            desc (int): If 1, runs are sorted from newest to oldest (default: None)
 
         Returns:
             run_list (JSON object): list of runs and their metadata
@@ -271,7 +268,7 @@ class Task(ApifyABC):
             actor_run_details (JSON object): actor run details
         """
         url = self._base_url + "/runs"
-        return super()._post(url, None, **kwargs)
+        return super()._post(url, input_, **kwargs)
 
     def run_synchronously(self, input_={}, **kwargs):
         """Runs task and returns its output
@@ -346,7 +343,7 @@ class _Run(ActorABC):
         Returns:
             actor_run_details (JSON object): actor run details
         """
-        url = self._base_url.replace(self.get_build_id(), "abort" + self.get_run_id())
+        url = self._base_url.replace(self.get_run_id(), "abort" + self.get_run_id())
         return super()._post(url)
 
 
