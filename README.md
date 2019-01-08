@@ -1,7 +1,7 @@
 Simple client library for the excellent [apify.com API](https://www.apify.com/docs) 
 ## Installation
 ### Using pip (Recommended)
-`pip install apify_unofficial`
+`pip install apifyunofficial`
 ### From source
 1. Clone this repository
 1. `python setup.py install`
@@ -9,7 +9,7 @@ Simple client library for the excellent [apify.com API](https://www.apify.com/do
 ## First use
 To ensure the module works, create a .json configuration file like the example `apify_config.json`, then run this python code:
 ```python
-import apify_unofficial as apify
+import apifyunofficial as apify
 print(apify.get_private_user_data(config=<CONFIG FILE>))
 ```
 

@@ -12,7 +12,7 @@ from shutil import rmtree
 from setuptools import find_packages, setup, Command
 
 # Package meta-data.
-NAME = 'apify_unofficial'
+NAME = 'apifyunofficial'
 DESCRIPTION = 'Unofficial client for the apify.com API'
 URL = 'https://github.com/ctrl-q/apify'
 EMAIL = ''
