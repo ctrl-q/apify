@@ -49,6 +49,6 @@ class ApifyABC:
         if data is None:
             r = self.get_session().post(url, params=kwargs)
         else:
-            r = self.get_session().psot(url, params=kwargs, json=data)
+            r = self.get_session().post(url, params=kwargs, json=data)
         r.raise_for_status()
         return r.json()
