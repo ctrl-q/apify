@@ -174,6 +174,10 @@ class Crawler(CrawlerABC):
         return execution.stop()
 
 
+class ExecutionError(Exception):
+    pass
+
+
 class Execution(CrawlerABC):
     def __init__(self, execution_id, session=requests.Session(), config="apify_config.json"):
         """Class for interacting with Apify executions
@@ -254,13 +258,11 @@ class Execution(CrawlerABC):
             result = r.json()
             if combine:
                 simplified = kwargs.get("simplified", 0)
-                if simplified == 0:
-                    result = list(
-                        r["pageFunctionResult"]
-                        for r in result if r["pageFunctionResult"] is not None
-                    )
-                elif simplified == 1:
-                    result = list(r for r in result if r is not None)
+                for i, r in enumerate(result):
+                    error = r.get("errorInfo")
+                    if error:
+                        raise ExecutionError(error)
+                    result[i] = r if simplified else r["pageFunctionResult"]
 
                 if len(result) > 0:
                     if isinstance(result[0], list):
